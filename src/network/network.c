@@ -53,6 +53,8 @@ unsigned long network_local_ip() {
 unsigned long network_ip(const char *host) {
 	struct hostent *hent;
 	hent = gethostbyname(host);
+	if(!hent)
+		return 0;
 	return (*((struct in_addr **) (hent->h_addr_list)))->s_addr;
 }
 

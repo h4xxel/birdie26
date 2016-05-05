@@ -74,6 +74,7 @@ void game_state(GameState state) {
 		case GAME_STATE_SELECT_NAME:
 		case GAME_STATE_HOST:
 		case GAME_STATE_LOBBY:
+		case GAME_STATE_ENTER_IP:
 			break;
 		case GAME_STATE_GAMEROOM:
 			break;
@@ -101,6 +102,9 @@ void game_state(GameState state) {
 			//gameroom.button.start->enabled = false;
 			//we_are_hosting_a_game = false;
 			//ui_listbox_clear(lobby.list);
+			break;
+		case GAME_STATE_ENTER_IP:
+			ui_selected_widget = enter_ip.entry;
 			break;
 		case GAME_STATE_HOST:
 			//we_are_hosting_a_game = true;
@@ -141,6 +145,7 @@ int main(int argc, char  **argv) {
 	gamestate_pane[GAME_STATE_MENU] = &menu.pane;
 	gamestate_pane[GAME_STATE_SELECT_NAME] = &select_name.pane;
 	gamestate_pane[GAME_STATE_LOBBY] = &lobby.pane;
+	gamestate_pane[GAME_STATE_ENTER_IP] = &enter_ip.pane;
 	gamestate_pane[GAME_STATE_GAMEROOM] = &gameroom.pane;
 	//gamestate_pane[GAME_STATE_GAME_OVER] = &game_over.pane;
 	
