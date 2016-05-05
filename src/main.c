@@ -112,14 +112,6 @@ int main(int argc, char  **argv) {
 	gfx.font.small = d_font_load(font_path, 16, 256, 256);
 	s = malloc(sizeof(*s));
 
-	/* XXX: TESTCODE */
-	s->active_level = d_map_load("res/arne.ldmz");
-	s->camera.follow = -1;
-	s->camera.x = s->camera.y = 0;
-	movableInit();
-	bulletInit();
-	movableLoad();
-	
 	ui_init(4);
 	menu_init();
 	gameroom_init();
@@ -155,18 +147,6 @@ int main(int argc, char  **argv) {
 		if(gamestate_pane[gamestate])
 			ui_events(gamestate_pane[gamestate], 1);
 
-		/* XXX: Testcode */ {
-			int i;
-			d_render_tint(255, 255, 255, 255);
-			movableLoop();
-			camera_work();
-			d_map_camera_move(s->active_level, s->camera.x, s->camera.y);
-			for (i = 0; i < s->active_level->layers; i++) {
-				d_tilemap_draw(s->active_level->layer[i].tilemap);
-				d_render_offset(s->camera.x, s->camera.y);
-				movableLoopRender(i);
-			}
-		}
 		d_render_end();
 		d_loop();
 	}

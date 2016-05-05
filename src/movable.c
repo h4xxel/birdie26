@@ -1,6 +1,7 @@
 #include <darnit/darnit.h>
 #include "main.h"
 #include "ailib.h"
+#include "util.h"
 #include <limits.h>
 #include <stdbool.h>
 
@@ -86,7 +87,7 @@ int movableLoad() {
 	d_bbox_set_indexkey(s->movable.bbox);
 
 	for (i = 0; i < s->movable.movables; i++) {
-		s->movable.movable[i].sprite = d_sprite_load(d_map_prop(s->active_level->object[i].ref, "sprite"), 0, DARNIT_PFORMAT_RGB5A1);
+		s->movable.movable[i].sprite = d_sprite_load(util_binrel_path(d_map_prop(s->active_level->object[i].ref, "sprite")), 0, DARNIT_PFORMAT_RGB5A1);
 		d_sprite_animate_start(s->movable.movable[i].sprite);
 		s->movable.movable[i].prevent_respawn = 0;
 
