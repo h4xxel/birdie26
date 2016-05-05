@@ -27,7 +27,7 @@ void ai_player(void *dummy, void *entry, MOVABLE_MSG msg) {
 			if (ingame_keystate[player_id].left)
 				self->x_velocity = -400;
 			else if (ingame_keystate[player_id].right)
-				self->x_velocity = 400;
+				self->x_velocity = 400, fprintf(stderr, "right\n");
 			else
 				self->x_velocity = 0;
 			if (ingame_keystate[player_id].jump) {

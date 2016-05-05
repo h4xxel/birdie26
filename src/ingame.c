@@ -2,6 +2,7 @@
 #include "ingame.h"
 #include "camera.h"
 #include "util.h"
+#include "network/protocol.h"
 #include <stdbool.h>
 
 struct InGameKeyStateEntry ingame_keystate[PLAYER_CAP];
@@ -41,31 +42,49 @@ void ingame_loop() {
 		d_render_offset(s->camera.x, s->camera.y);
 		movableLoopRender(i);
 	}
+	ingame_client_keyboard();
 }
 
 
 void ingame_client_keyboard() {
-	struct InGameKeyStateEntry oldstate;
-	struct InGameKeyStateEntry newstate;
+	static struct InGameKeyStateEntry oldstate;
+	struct InGameKeyStateEntry newstate, pressevent, releaseevent;
 	
 	newstate.left = d_keys_get().left;
 	newstate.right = d_keys_get().right;
 	newstate.jump = d_keys_get().up;
+
+	
 	
 	if (newstate.left ^ oldstate.left) {
-		// change happened
+		if (newstate.left)
+			pressevent.left = true, releaseevent.left = false;
+		else
+			releaseevent.left = true, pressevent.left = false;
 	}
 
 	if (newstate.right ^ oldstate.right) {
-		// change happened
+		if (newstate.right)
+			pressevent.right = true, releaseevent.right = false;
+		else
+			releaseevent.right = true, pressevent.right = false;
 	}
 	
 	if (newstate.jump ^ oldstate.jump) {
-		// change happened
+		if (newstate.jump)
+			pressevent.jump = true, releaseevent.jump = false;
+		else
+			releaseevent.jump = true, pressevent.jump = false;
 	}
 
-	/* ... */
-	/* TODO: Need to send this to the serb */
+	PacketKeypress kp;
+
+	kp.size = sizeof(kp);
+	kp.type = PACKET_TYPE_KEYPRESS;
+	kp.keypress = pressevent;
+	kp.keyrelease = releaseevent;
+
+	protocol_send_packet(server_sock, (void *) &kp);
 
 	oldstate = newstate;
 }

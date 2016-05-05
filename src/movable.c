@@ -270,7 +270,8 @@ void movableLoop() {
 		}
 
 
-		d_sprite_direction_set(s->movable.movable[i].sprite, s->movable.movable[i].direction);
+		if (s->movable.movable[i].direction != d_sprite_direction_get(s->movable.movable[i].sprite))
+			d_sprite_direction_set(s->movable.movable[i].sprite, s->movable.movable[i].direction);
 		d_sprite_move(s->movable.movable[i].sprite, s->movable.movable[i].x / 1000, s->movable.movable[i].y / 1000);
 		d_sprite_hitbox(s->movable.movable[i].sprite, &h_x, &h_y, &h_w, &h_h);
 		d_bbox_move(s->movable.bbox, i, s->movable.movable[i].x / 1000 + h_x, s->movable.movable[i].y / 1000 + h_y);

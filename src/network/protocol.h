@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include "../main.h"
+#include "../ingame.h"
 
 
 typedef enum PacketType PacketType;
@@ -10,6 +11,7 @@ enum PacketType {
 	PACKET_TYPE_LOBBY,
 	PACKET_TYPE_JOIN,
 	PACKET_TYPE_START,
+	PACKET_TYPE_KEYPRESS,
 	PACKET_TYPE_EXIT,
 };
 
@@ -38,6 +40,14 @@ struct PacketStart {
 	uint32_t player_id;
 };
 
+typedef struct PacketKeypress PacketKeypress;
+struct PacketKeypress {
+	uint16_t type;
+	uint16_t size;
+
+	struct InGameKeyStateEntry keypress, keyrelease;
+};
+
 typedef struct PacketExit PacketExit;
 struct PacketExit {
 	uint16_t type;
@@ -54,6 +64,7 @@ union Packet {
 	PacketLobby lobby;
 	PacketJoin join;
 	PacketStart start;
+	PacketKeypress keypress;
 	PacketExit exit;
 	
 	uint8_t raw[512];
