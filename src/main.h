@@ -9,6 +9,7 @@
 #define PORT 1338
 
 #define NAME_LEN_MAX 64
+#define	PLAYER_CAP 4
 
 #include "movable.h"
 #include "bullet.h"

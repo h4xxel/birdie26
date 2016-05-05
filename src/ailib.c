@@ -1,5 +1,6 @@
 #include "ailib.h"
 #include "movable.h"
+#include "ingame.h"
 #include "main.h"
 #include <string.h>
 
@@ -7,6 +8,13 @@
 
 void ai_player(void *dummy, void *entry, MOVABLE_MSG msg) {
 	MOVABLE_ENTRY *self = entry;
+	int player_id;
+	char *playerid_str;
+	
+	/* On a scale of 1 to italy, how inefficient is this? */
+	if (!(playerid_str = d_map_prop(s->active_level->object[self->id].ref, "player_id")))
+		return self->hp = 0, (void) 0;
+	player_id = atoi(playerid_str);
 	
 	switch (msg) {
 		case MOVABLE_MSG_INIT:
@@ -15,18 +23,16 @@ void ai_player(void *dummy, void *entry, MOVABLE_MSG msg) {
 			s->camera.follow = self->id;
 			break;
 		case MOVABLE_MSG_LOOP:
-			if (d_keys_get().left)
+			if (ingame_keystate[player_id].left)
 				self->x_velocity = -400;
-			else if (d_keys_get().right)
+			else if (ingame_keystate[player_id].right)
 				self->x_velocity = 400;
 			else
 				self->x_velocity = 0;
-			if (d_keys_get().up) {
+			if (ingame_keystate[player_id].jump) {
 				DARNIT_KEYS keys;
-
-				keys =	d_keys_zero();
-				keys.up = 1;
-				d_keys_set(keys);
+				
+				ingame_keystate[player_id].jump = 0;
 				
 				if (!self->y_velocity)
 					self->y_velocity = -600;

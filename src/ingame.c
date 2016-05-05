@@ -2,7 +2,9 @@
 #include "ingame.h"
 #include "camera.h"
 #include "util.h"
+#include <stdbool.h>
 
+struct InGameKeyStateEntry ingame_keystate[PLAYER_CAP];
 
 void ingame_init() {
 	/* Leak *all* the memory */
@@ -28,4 +30,25 @@ void ingame_loop() {
 		d_render_offset(s->camera.x, s->camera.y);
 		movableLoopRender(i);
 	}
+}
+
+
+void ingame_client_keyboard() {
+	struct InGameKeyStateEntry oldstate;
+	struct InGameKeyStateEntry newstate;
+	
+	newstate.left = d_keys_get().left;
+	newstate.right = d_keys_get().right;
+	
+	if (newstate.left ^ oldstate.left) {
+		// change happened
+	}
+
+	if (newstate.right ^ oldstate.right) {
+		// change happened
+	}
+
+	/* ... */
+
+	oldstate = newstate;
 }
