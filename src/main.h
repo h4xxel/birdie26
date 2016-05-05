@@ -8,6 +8,9 @@
 
 #define NAME_LEN_MAX 64
 
+#include "movable.h"
+#include "bullet.h"
+
 typedef enum GameState GameState;
 enum GameState {
 	GAME_STATE_MENU,
@@ -31,6 +34,20 @@ struct Gfx {
 
 extern Gfx gfx;
 extern char player_name[];
+
+
+struct GameStateStruct {
+	MOVABLE			movable;
+	DARNIT_MAP		*active_level;
+	BULLET			bullet;
+	struct {
+				int x;
+				int y;
+				int follow;
+	} camera;
+};
+
+extern struct GameStateStruct *s;
 
 void game_state(GameState state);
 

@@ -11,6 +11,7 @@
 
 Gfx gfx;
 GameState gamestate;
+struct GameStateStruct *s;
 char player_name[NAME_LEN_MAX + 1];
 
 void (*state_render[GAME_STATES])()={
@@ -104,6 +105,15 @@ int main(int argc, char  **argv) {
 	sprintf(font_path, "%s/res/font.ttf", dirname(font_path));
 	gfx.font.large = d_font_load(font_path, 40, 256, 256);
 	gfx.font.small = d_font_load(font_path, 16, 256, 256);
+	s = malloc(sizeof(*s));
+
+	/* XXX: TESTCODE */
+	s->active_level = d_map_load("res/arne.ldmz");
+	s->camera.follow = -1;
+	s->camera.x = s->camera.y = 0;
+	movableInit();
+	//bulletInit();
+	movableLoad();
 	
 	ui_init(4);
 	menu_init();
@@ -137,7 +147,15 @@ int main(int argc, char  **argv) {
 		d_render_tint(0, 255, 0, 255);
 		if(gamestate_pane[gamestate])
 			ui_events(gamestate_pane[gamestate], 1);
-			
+
+		/* XXX: Testcode */ {
+			int i;
+			movableLoop();
+			for (i = 0; i < s->active_level->layers; i++) {
+				d_tilemap_draw(s->active_level->layer[i].tilemap);
+				movableLoopRender(i);
+			}
+		}
 		d_render_end();
 		d_loop();
 	}

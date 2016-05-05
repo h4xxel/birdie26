@@ -18,7 +18,7 @@ RMDIR		=	rmdir --ignore-fail-on-non-empty
 CP		=	cp
 
 ifeq ($(TARGET),i586-mingw32msvc-)
-LDFLAGS	+=	-lws2_32 -lopengl32 -mwindows bin/res.res
+LDFLAGS	+=	-static -lws2_32 -lopengl32 -lwinmm -lgdi32 -lshlwapi -lstdc++ -mwindows bin/res.res
 BINEXT	=.exe
 endif
 
