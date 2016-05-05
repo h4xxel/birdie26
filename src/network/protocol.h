@@ -35,7 +35,7 @@ struct PacketStart {
 	uint16_t type;
 	uint16_t size;
 	
-	//setup stuff here
+	uint32_t player_id;
 };
 
 typedef struct PacketExit PacketExit;
@@ -53,7 +53,7 @@ union Packet {
 	
 	PacketLobby lobby;
 	PacketJoin join;
-	PacketStart setup;
+	PacketStart start;
 	PacketExit exit;
 	
 	uint8_t raw[512];

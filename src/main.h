@@ -42,6 +42,7 @@ extern int server_sock;
 
 
 struct GameStateStruct {
+	int	player_id;
 	MOVABLE			movable;
 	DARNIT_MAP		*active_level;
 	BULLET			bullet;

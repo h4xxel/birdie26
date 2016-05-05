@@ -102,6 +102,8 @@ int server_thread(void *arg) {
 					start.type = PACKET_TYPE_START;
 					start.size = sizeof(PacketStart);
 					
+					start.player_id = tmp->id;
+					
 					protocol_send_packet(tmp->sock, (void *) &start);
 				}
 				
