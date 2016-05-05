@@ -14,7 +14,7 @@ void ai_player(void *dummy, void *entry, MOVABLE_MSG msg) {
 	/* On a scale of 1 to italy, how inefficient is this? */
 	if (!(playerid_str = d_map_prop(s->active_level->object[self->id].ref, "player_id")))
 		return self->hp = 0, (void) 0;
-	player_id = atoi(playerid_str);
+	player_id = atoi(playerid_str) - 1;
 	
 	switch (msg) {
 		case MOVABLE_MSG_INIT:
