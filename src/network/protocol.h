@@ -14,15 +14,16 @@ enum PacketType {
 
 typedef struct PacketLobby PacketLobby;
 struct PacketLobby {
-	uint32_t type;
+	uint16_t type;
+	uint16_t size;
 	
-	uint32_t begin;
 	char name[NAME_LEN_MAX];
 };
 
 typedef struct PacketSetup PacketSetup;
 struct PacketSetup {
-	uint32_t type;
+	uint16_t type;
+	uint16_t size;
 	
 	uint32_t id;
 	uint32_t objects;
@@ -34,7 +35,8 @@ struct PacketSetup {
 
 typedef struct PacketExit PacketExit;
 struct PacketExit {
-	uint32_t type;
+	uint16_t type;
+	uint16_t size;
 };
 
 typedef union Packet Packet;
@@ -50,5 +52,8 @@ union Packet {
 	
 	uint8_t raw[512];
 };
+
+int protocol_send_packet(int sock, Packet *pack);
+int protocol_recv_packet(int sock, Packet *pack);
 
 #endif

@@ -50,6 +50,12 @@ unsigned long network_local_ip() {
 	return (*((struct in_addr **) (host->h_addr_list)))->s_addr;
 }
 
+unsigned long network_ip(const char *host) {
+	struct hostent *hent;
+	hent = gethostbyname(host);
+	return (*((struct in_addr **) (hent->h_addr_list)))->s_addr;
+}
+
 int network_poll_udp() {
 	fd_set fds;
 	struct timeval tv = {
@@ -171,7 +177,7 @@ int network_listen_tcp(int port) {
 		return -1;
 	}
 	
-	#ifndef _WIN32
+/*	#ifndef _WIN32
 	if((flags = fcntl(sock, F_GETFL, 0)) < 0)
 		flags = 0;
 	if(fcntl(sock, F_SETFL, flags | O_NONBLOCK) < 0) {
@@ -181,7 +187,7 @@ int network_listen_tcp(int port) {
 	#else
 	u_long mode = 1;
 	ioctlsocket(sock, FIONBIO, &mode);
-	#endif
+	#endif*/
 
 	return sock;
 }
@@ -196,7 +202,7 @@ int network_accept_tcp(int listensock) {
 	if((sock = accept(listensock, (void *) &addr, (void *) &addr_len)) == INVALID_SOCKET)
 		return -1;
 
-	#ifndef _WIN32
+/*	#ifndef _WIN32
 	int flags;
 
 	if((flags = fcntl(sock, F_GETFL, 0)) < 0)
@@ -206,17 +212,17 @@ int network_accept_tcp(int listensock) {
 		return -1;
 	}
 	#else
-	int mode = 1;
+	u_long mode = 1;
 	ioctlsocket(sock, FIONBIO, &mode);
 	#endif
-	setsockopt(sock, IPPROTO_TCP, SO_LINGER, NULL, 0);
+	setsockopt(sock, IPPROTO_TCP, SO_LINGER, NULL, 0);*/
 
 	return sock;
 }
 
-int network_connect_tcp(const char *host_ip, int port) {
+int network_connect_tcp(unsigned long to, int port) {
 	int sock;
-	struct hostent *host;
+	//struct hostent *host;
 	struct sockaddr_in addr = {
 		.sin_family = AF_INET,
 	};
@@ -224,8 +230,10 @@ int network_connect_tcp(const char *host_ip, int port) {
 	if((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
 		return -1;
 	
-	host = gethostbyname(host_ip);
-	addr.sin_addr = **((struct in_addr **) (host->h_addr_list));
+	/*host = gethostbyname(host_ip);
+	addr.sin_addr = **((struct in_addr **) (host->h_addr_list));*/
+	
+	addr.sin_addr.s_addr = to;
 	addr.sin_port=htons(port);
 	
 	if(connect(sock, (struct sockaddr *) &addr, sizeof(addr)) < 0) {
@@ -235,7 +243,21 @@ int network_connect_tcp(const char *host_ip, int port) {
 	return sock;
 }
 
-void network_send_tcp() {
-	
+int network_poll_tcp(int sock) {
+	fd_set fds;
+	struct timeval tv = {
+		.tv_sec = 0,
+		.tv_usec = 0,
+	};
+	FD_ZERO(&fds);
+	FD_SET(sock, &fds);
+	return select(sock + 1, &fds, NULL, NULL, &tv);
 }
 
+int network_send_tcp(int sock, char *buf, int buflen) {
+	return send(sock, buf, buflen, 0);
+}
+
+int network_recv_tcp(int sock, char *buf, int buflen) {
+	return recv(sock, buf, buflen, 0);
+}

@@ -10,12 +10,12 @@ static void button_callback(UI_WIDGET *widget, unsigned int type, UI_EVENT *e) {
 	if(widget == gameroom.button.back) {
 		restart_to_menu(player_name);
 	} else if(widget == gameroom.button.start) {
-		//server_start_game();
+		server_start_game();
 	}
 }
 
 void gameroom_init() {
-	gameroom.pane.pane = ui_pane_create(DISPLAY_WIDTH/2 - 200, DISPLAY_HEIGHT/2 - 300, 400, 600, gameroom.vbox = ui_widget_create_vbox());
+	gameroom.pane.pane = ui_pane_create(10, 10, DISPLAY_WIDTH - 20, DISPLAY_HEIGHT - 20, gameroom.vbox = ui_widget_create_vbox());
 	gameroom.pane.next = NULL;
 
 	ui_vbox_add_child(gameroom.vbox, gameroom.label = ui_widget_create_label(gfx.font.large, "Players in game"), 0);
