@@ -9,6 +9,13 @@
 
 int usleep(useconds_t usec);
 
+typedef enum ServerState ServerState;
+enum ServerState {
+	SERVER_STATE_LOBBY,
+	SERVER_STATE_STARTING,
+	SERVER_STATE_GAME,
+};
+
 typedef struct ClientList ClientList;
 struct ClientList {
 	int id;
@@ -18,10 +25,11 @@ struct ClientList {
 	ClientList *next;
 };
 
-static volatile bool server_in_game;
 static int listen_sock;
 static ClientList *client = NULL;
 static int clients = 0;
+static volatile ServerState server_state;
+
 
 void server_handle_client(ClientList *cli) {
 	Packet pack;
@@ -56,7 +64,7 @@ void server_handle_client(ClientList *cli) {
 	}
 }
 
-int server_lobby(void *arg) {
+int server_thread(void *arg) {
 	PacketLobby pack;
 	ClientList *tmp;
 	
@@ -66,39 +74,62 @@ int server_lobby(void *arg) {
 	strcpy(pack.name, player_name);
 	
 	for(;;) {
-		if(network_poll_tcp(listen_sock)) {
-			int sock;
-			
-			sock = network_accept_tcp(listen_sock);
-			printf("accept %i\n", sock);
-			
-			tmp = malloc(sizeof(ClientList));
-			tmp->sock = sock;
-			tmp->id = clients++;
-			tmp->next = client;
-			client = tmp;
+		switch(server_state) {
+			case SERVER_STATE_LOBBY:
+				if(network_poll_tcp(listen_sock)) {
+					int sock;
+					
+					sock = network_accept_tcp(listen_sock);
+					
+					tmp = malloc(sizeof(ClientList));
+					tmp->sock = sock;
+					tmp->id = clients++;
+					tmp->next = client;
+					client = tmp;
+				}
+				
+				for(tmp = client; tmp; tmp = tmp->next)
+					server_handle_client(tmp);
+				
+				network_broadcast_udp(&pack, pack.size);
+				usleep(100000);
+				break;
+				
+			case SERVER_STATE_STARTING:
+				for(tmp = client; tmp; tmp = tmp->next) {
+					PacketStart start;
+					
+					start.type = PACKET_TYPE_START;
+					start.size = sizeof(PacketStart);
+					
+					protocol_send_packet(tmp->sock, (void *) &start);
+				}
+				
+				server_state = SERVER_STATE_GAME;
+				break;
+				
+			case SERVER_STATE_GAME:
+				for(tmp = client; tmp; tmp = tmp->next)
+					server_handle_client(tmp);
+				
+				sleep(1);
+				break;
 		}
-		
-		for(tmp = client; tmp; tmp = tmp->next)
-			server_handle_client(tmp);
-		
-		network_broadcast_udp(&pack, pack.size);
-		usleep(100000);
 	}
 	
 	return 0;
 }
 
 void server_start() {
-	server_in_game = false;
+	server_state = SERVER_STATE_LOBBY;
 	if((listen_sock = network_listen_tcp(PORT + 1)) < 0) {
 		fprintf(stderr, "Server failed to open listening socket\n");
 		exit(1);
 	}
-	d_util_thread_new(server_lobby, NULL);
+	d_util_thread_new(server_thread, NULL);
 }
 
 
 void server_start_game() {
-	server_in_game = true;
+	server_state = SERVER_STATE_STARTING;
 }

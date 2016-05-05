@@ -42,7 +42,14 @@ void gameroom_network_handler() {
 	if(!network_poll_tcp(server_sock))
 		return;
 	protocol_recv_packet(server_sock, &pack);
-	if(pack.type == PACKET_TYPE_JOIN) {
-		ui_listbox_add(gameroom.list, pack.join.name);
+	
+	switch(pack.type) {
+		case PACKET_TYPE_JOIN:
+			ui_listbox_add(gameroom.list, pack.join.name);
+			break;
+		
+		case PACKET_TYPE_START:
+			game_state(GAME_STATE_GAME);
+			break;
 	}
 }

@@ -9,7 +9,7 @@ typedef enum PacketType PacketType;
 enum PacketType {
 	PACKET_TYPE_LOBBY,
 	PACKET_TYPE_JOIN,
-	PACKET_TYPE_SETUP,
+	PACKET_TYPE_START,
 	PACKET_TYPE_EXIT,
 };
 
@@ -30,17 +30,12 @@ struct PacketJoin {
 	char name[NAME_LEN_MAX];
 };
 
-typedef struct PacketSetup PacketSetup;
-struct PacketSetup {
+typedef struct PacketStart PacketStart;
+struct PacketStart {
 	uint16_t type;
 	uint16_t size;
 	
-	uint32_t id;
-	uint32_t objects;
-//	double width;
-	double map_width;
-	uint32_t pre_simulations;
-	uint32_t home;
+	//setup stuff here
 };
 
 typedef struct PacketExit PacketExit;
@@ -58,7 +53,7 @@ union Packet {
 	
 	PacketLobby lobby;
 	PacketJoin join;
-	PacketSetup setup;
+	PacketStart setup;
 	PacketExit exit;
 	
 	uint8_t raw[512];
