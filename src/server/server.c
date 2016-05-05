@@ -18,8 +18,8 @@ struct ClientList {
 	ClientList *next;
 };
 
-static bool server_in_game;
-static int server_sock;
+static volatile bool server_in_game;
+static int listen_sock;
 static ClientList *client = NULL;
 static int clients = 0;
 
@@ -58,6 +58,7 @@ void server_handle_client(ClientList *cli) {
 
 int server_lobby(void *arg) {
 	PacketLobby pack;
+	ClientList *tmp;
 	
 	pack.type = PACKET_TYPE_LOBBY;
 	pack.size = sizeof(PacketLobby);
@@ -65,11 +66,11 @@ int server_lobby(void *arg) {
 	strcpy(pack.name, player_name);
 	
 	for(;;) {
-		if(network_poll_tcp(server_sock)) {
-			ClientList *tmp;
+		if(network_poll_tcp(listen_sock)) {
 			int sock;
 			
-			sock = network_accept_tcp(server_sock);
+			sock = network_accept_tcp(listen_sock);
+			printf("accept %i\n", sock);
 			
 			tmp = malloc(sizeof(ClientList));
 			tmp->sock = sock;
@@ -77,6 +78,9 @@ int server_lobby(void *arg) {
 			tmp->next = client;
 			client = tmp;
 		}
+		
+		for(tmp = client; tmp; tmp = tmp->next)
+			server_handle_client(tmp);
 		
 		network_broadcast_udp(&pack, pack.size);
 		usleep(100000);
@@ -87,7 +91,7 @@ int server_lobby(void *arg) {
 
 void server_start() {
 	server_in_game = false;
-	if((server_sock = network_listen_tcp(PORT + 1)) < 0) {
+	if((listen_sock = network_listen_tcp(PORT + 1)) < 0) {
 		fprintf(stderr, "Server failed to open listening socket\n");
 		exit(1);
 	}

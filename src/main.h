@@ -33,8 +33,10 @@ struct Gfx {
 
 extern Gfx gfx;
 extern char player_name[];
+extern int server_sock;
 
 void game_state(GameState state);
 void restart_to_menu(const char *name);
+int join_game(unsigned long sip);
 
 #endif

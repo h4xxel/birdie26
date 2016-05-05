@@ -10,7 +10,6 @@ Lobby lobby;
 
 static void button_callback(UI_WIDGET *widget, unsigned int type, UI_EVENT *e) {
 	UI_PROPERTY_VALUE v;
-	PacketJoin join;
 	
 	if(widget == lobby.button.back) {
 		restart_to_menu(player_name);
@@ -20,14 +19,7 @@ static void button_callback(UI_WIDGET *widget, unsigned int type, UI_EVENT *e) {
 			return;
 		
 		unsigned long sip = strtoul(ui_listbox_get(lobby.list, v.i), NULL, 10);
-		int server_sock = network_connect_tcp(sip, PORT + 1);
-		
-		join.type = PACKET_TYPE_JOIN;
-		join.id = 0;
-		memcpy(join.name, player_name, NAME_LEN_MAX);
-		join.name[NAME_LEN_MAX - 1] = 0;
-		
-		protocol_send_packet(server_sock, (void *) &join);
+		join_game(sip);
 		game_state(GAME_STATE_GAMEROOM);
 	}
 }

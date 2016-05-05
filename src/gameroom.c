@@ -1,7 +1,9 @@
+#include <stdbool.h>
 #include <darnit/darnit.h>
 #include "ui/ui.h"
+#include "network/network.h"
+#include "network/protocol.h"
 #include "server/server.h"
-#include "main.h"
 #include "gameroom.h"
 #include "main.h"
 
@@ -27,28 +29,20 @@ void gameroom_init() {
 	ui_vbox_add_child(gameroom.hbox, gameroom.button.start = ui_widget_create_button_text(gfx.font.small, "Start game"), 0);
 	ui_vbox_add_child(gameroom.vbox, gameroom.hbox, 0);
 	
+	gameroom.button.start->enabled = false;
+	
 	gameroom.button.back->event_handler->add(gameroom.button.back, button_callback, UI_EVENT_TYPE_UI_WIDGET_ACTIVATE);
 	gameroom.button.start->event_handler->add(gameroom.button.start, button_callback, UI_EVENT_TYPE_UI_WIDGET_ACTIVATE);
 }
 
 
 void gameroom_network_handler() {
-	/*Packet pack;
-	unsigned long int ip;
-	if(!network_poll())
+	Packet pack;
+	
+	if(!network_poll_tcp(server_sock))
 		return;
-	ip = network_recv(&pack, sizeof(Packet));
-	if(pack.type == PACKET_TYPE_LOBBY) {
-		printf("pack %i\n", pack.lobby.begin);
-		if(pack.lobby.begin == 6) {
-			printf("joined: %s\n", pack.lobby.name);
-			ui_listbox_add(gameroom.list, pack.lobby.name);
-		}
-	} else if(pack.type == PACKET_TYPE_SETUP) {
-		object_init(pack.setup.objects, pack.setup.pre_simulations);
-		object_init_border(pack.setup.map_width);
-		camera_init(pack.setup.id, pack.setup.home);
-		game_state(GAME_STATE_GAME);
+	protocol_recv_packet(server_sock, &pack);
+	if(pack.type == PACKET_TYPE_JOIN) {
+		ui_listbox_add(gameroom.list, pack.join.name);
 	}
-	*/
 }
