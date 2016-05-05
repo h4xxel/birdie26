@@ -25,6 +25,7 @@ release:
 	@make all
 	@$(MKDIR) release/$(BINFILE)
 	@$(CP) -R bin/* release/$(BINFILE)
+	@$(STRIP) release/$(BINFILE)/$(BINFILE)$(BINEXT)
 	
 package: release
 	@(cd release; zip -r $(BINFILE).zip $(BINFILE))
