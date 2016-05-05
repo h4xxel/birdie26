@@ -7,7 +7,7 @@
 struct InGameKeyStateEntry ingame_keystate[PLAYER_CAP];
 
 void ingame_init() {
-	int i, player_id;
+	int i;
 	const char *playerid_str;
 	/* Leak *all* the memory */
 	s->active_level = d_map_load(util_binrel_path("res/arne.ldmz"));
@@ -50,6 +50,7 @@ void ingame_client_keyboard() {
 	
 	newstate.left = d_keys_get().left;
 	newstate.right = d_keys_get().right;
+	newstate.jump = d_keys_get().up;
 	
 	if (newstate.left ^ oldstate.left) {
 		// change happened
@@ -58,8 +59,13 @@ void ingame_client_keyboard() {
 	if (newstate.right ^ oldstate.right) {
 		// change happened
 	}
+	
+	if (newstate.jump ^ oldstate.jump) {
+		// change happened
+	}
 
 	/* ... */
+	/* TODO: Need to send this to the serb */
 
 	oldstate = newstate;
 }
