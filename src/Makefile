@@ -1,3 +1,5 @@
+first: all
+
 TOPDIR	=	$(shell DIR=.; while [ ! "`readlink -f \"$${DIR}\"`" = "/" -a ! -f "$${DIR}/config.mk" ]; do DIR="../$${DIR}"; done; echo "$${DIR}")
 ifeq ($(shell readlink -f "$(TOPDIR)"),/)
 	$(error Could not find the project top directory with config.mk)
@@ -45,7 +47,7 @@ clean: $(SUBDIRS)
 $(OUTFILE): $(OBJFILES) $(SUBDIRS)
 	@echo " [ AR ] $(CURRENTPATH)$(OUTFILE)"
 	@$(RM) $(OUTFILE)
-	@$(AR) -cmT $(OUTFILE) $(OBJFILES) $(LIBS)
+	$(AR) -cmT $(OUTFILE) $(OBJFILES) $(LIBS)
 
 $(SUBDIRS):
 	@echo " [ CD ] $(CURRENTPATH)$@"

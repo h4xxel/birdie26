@@ -1,3 +1,5 @@
+first: all
+
 TOPDIR	=	.
 include config.mk
 
@@ -12,8 +14,7 @@ SUBDIRS		=	$(SRCDIRS) $(PLUGINSDIR)
 .PHONY: all clean
 .PHONY: $(SUBDIRS)
 
-all: $(SUBDIRS)
-	@$(MKDIR) bin/
+all: bin $(SUBDIRS) $(TARGET)
 	@echo " [ LD ] bin/$(BINFILE)$(BINEXT)"
 	@$(CC) -o bin/$(BINFILE)$(BINEXT) $(CFLAGS) -Wl,--whole-archive $(addsuffix /out.a,$(SRCDIRS)) -Wl,--no-whole-archive $(LDFLAGS)
 	
@@ -21,6 +22,7 @@ all: $(SUBDIRS)
 	@echo 
 
 release:
+	@make all
 	@$(MKDIR) release/$(BINFILE)
 	@$(CP) -R bin/* release/$(BINFILE)
 	
@@ -39,6 +41,9 @@ mrproper:
 	@make clean
 	@echo " [ RM ] release/"
 	@$(RM) -R release/
+
+bin:
+	@$(MKDIR) $@
 
 $(SUBDIRS):
 	@echo " [ CD ] $(CURRENTPATH)$@/"
