@@ -47,7 +47,7 @@ clean: $(SUBDIRS)
 $(OUTFILE): $(OBJFILES) $(SUBDIRS)
 	@echo " [ AR ] $(CURRENTPATH)$(OUTFILE)"
 	@$(RM) $(OUTFILE)
-	$(AR) -cmT $(OUTFILE) $(OBJFILES) $(LIBS)
+	@$(AR) -crT $(OUTFILE) $(OBJFILES) $(LIBS)
 
 $(SUBDIRS):
 	@echo " [ CD ] $(CURRENTPATH)$@"
