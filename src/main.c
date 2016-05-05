@@ -14,15 +14,18 @@
 #include "network/network.h"
 #include "network/protocol.h"
 #include "main.h"
+#include "camera.h"
+#include "ingame.h"
 
 Gfx gfx;
 GameState gamestate;
+struct GameStateStruct *s;
 char player_name[NAME_LEN_MAX];
 int server_sock;
 
 void (*state_render[GAME_STATES])()={
 	[GAME_STATE_MENU] = menu_render,
-//	[GAME_STATE_GAME] = game_render,
+	[GAME_STATE_GAME] = ingame_loop,
 	[GAME_STATE_SELECT_NAME] = NULL,
 //	[GAME_STATE_GAME_OVER] = game_over_render,
 };
@@ -87,6 +90,7 @@ void game_state(GameState state) {
 	//Game state constructors
 	switch(state) {
 		case GAME_STATE_GAME:
+			ingame_init();
 			//init game shit
 			//pthread_create(&game.thread, NULL, object_thread, NULL);
 			#ifndef __DEBUG__
@@ -136,7 +140,8 @@ int main(int argc, char  **argv) {
 	sprintf(font_path, "%s/res/font.ttf", dirname(font_path));
 	gfx.font.large = d_font_load(font_path, 40, 256, 256);
 	gfx.font.small = d_font_load(font_path, 16, 256, 256);
-	
+	s = malloc(sizeof(*s));
+
 	ui_init(4);
 	menu_init();
 	gameroom_init();
@@ -172,7 +177,7 @@ int main(int argc, char  **argv) {
 		d_render_tint(0, 255, 0, 255);
 		if(gamestate_pane[gamestate])
 			ui_events(gamestate_pane[gamestate], 1);
-			
+
 		d_render_end();
 		d_loop();
 	}

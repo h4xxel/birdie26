@@ -9,6 +9,10 @@
 #define PORT 1338
 
 #define NAME_LEN_MAX 64
+#define	PLAYER_CAP 4
+
+#include "movable.h"
+#include "bullet.h"
 
 typedef enum GameState GameState;
 enum GameState {
@@ -35,6 +39,20 @@ struct Gfx {
 extern Gfx gfx;
 extern char player_name[];
 extern int server_sock;
+
+
+struct GameStateStruct {
+	MOVABLE			movable;
+	DARNIT_MAP		*active_level;
+	BULLET			bullet;
+	struct {
+				int x;
+				int y;
+				int follow;
+	} camera;
+};
+
+extern struct GameStateStruct *s;
 
 void game_state(GameState state);
 void restart_to_menu(const char *name);
