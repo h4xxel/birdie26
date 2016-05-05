@@ -23,4 +23,4 @@ BINEXT	=.exe
 endif
 
 i586-mingw32msvc-: bin
-	@$(WINDRES) platform/windows/res.rc -O coff -o bin/res.res
+	@$(TARGET)windres platform/windows/res.rc -O coff -o bin/res.res
