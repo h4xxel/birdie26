@@ -21,6 +21,7 @@ static void button_callback_menu(UI_WIDGET *widget, unsigned int type, UI_EVENT 
 	/*UI_PROPERTY_VALUE v;
 	v.p = "arne";
 	label->set_prop(label, UI_LABEL_PROP_TEXT, v);*/
+	
 	if(widget == menu.button.host) {
 		game_state(GAME_STATE_HOST);
 	} else if(widget == menu.button.join) {
@@ -55,7 +56,6 @@ void menu_init() {
 	menu.button.host->event_handler->add(menu.button.host, button_callback_menu, UI_EVENT_TYPE_UI_WIDGET_ACTIVATE);
 	menu.button.join->event_handler->add(menu.button.join, button_callback_menu, UI_EVENT_TYPE_UI_WIDGET_ACTIVATE);
 	menu.button.quit->event_handler->add(menu.button.quit, button_callback_menu, UI_EVENT_TYPE_UI_WIDGET_ACTIVATE);
-        menu.button.host->event_handler->add(menu.button.host, button_callback_menu, UI_EVENT_TYPE_UI_WIDGET_ACTIVATE);
         
         
 	select_name.pane.pane = ui_pane_create(DISPLAY_WIDTH/2 - 200, DISPLAY_HEIGHT/2 - 150/2, 400, 150, select_name.vbox = ui_widget_create_vbox());

@@ -10,7 +10,7 @@ Lobby lobby;
 
 static void button_callback(UI_WIDGET *widget, unsigned int type, UI_EVENT *e) {
 	UI_PROPERTY_VALUE v;
-	//Packet pack;
+	PacketJoin join;
 	
 	if(widget == lobby.button.back) {
 		restart_to_menu(player_name);
@@ -19,14 +19,16 @@ static void button_callback(UI_WIDGET *widget, unsigned int type, UI_EVENT *e) {
 		if(v.i < 0)
 			return;
 		
-		//unsigned long sip = strtoul(ui_listbox_get(lobby.list, v.i), NULL, 10);
-		//server_sock = network_tcp_connect(sip, PORT + 1)
+		unsigned long sip = strtoul(ui_listbox_get(lobby.list, v.i), NULL, 10);
+		int server_sock = network_connect_tcp(sip, PORT + 1);
 		
-		/*pack.type = PACKET_TYPE_LOBBY;
-		pack.lobby.begin = 5;
-		memcpy(pack.lobby.name, player_name, NAME_LEN_MAX);
-		network_send(sip, &pack, sizeof(Packet));
-		game_state(GAME_STATE_GAMEROOM);*/
+		join.type = PACKET_TYPE_JOIN;
+		join.id = 0;
+		memcpy(join.name, player_name, NAME_LEN_MAX);
+		join.name[NAME_LEN_MAX - 1] = 0;
+		
+		protocol_send_packet(server_sock, (void *) &join);
+		game_state(GAME_STATE_GAMEROOM);
 	}
 }
 
@@ -64,13 +66,13 @@ void lobby_network_handler() {
 		s = ui_listbox_get(lobby.list, i);
 		if(strtoul(s, NULL, 10) == ip) {
 			if(strstr(s, "Unknown")) {
-				sprintf(name, "%lu: %s", ip, pack.lobby.name);
+				sprintf(name, "%lu: %s's game", ip, pack.lobby.name);
 				ui_listbox_set(lobby.list, i, name);
 				return;
 			} else
 				return;
 		}
 	}
-	sprintf(name, "%lu: %s", ip, pack.lobby.name);
+	sprintf(name, "%lu: %s's game", ip, pack.lobby.name);
 	ui_listbox_add(lobby.list, name);
 }

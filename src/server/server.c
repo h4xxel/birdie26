@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <stdbool.h>
 #include <darnit/darnit.h>
@@ -6,7 +7,54 @@
 #include "../network/network.h"
 #include "../network/protocol.h"
 
-bool server_in_game;
+int usleep(useconds_t usec);
+
+typedef struct ClientList ClientList;
+struct ClientList {
+	int id;
+	int sock;
+	char name[NAME_LEN_MAX];
+	
+	ClientList *next;
+};
+
+static bool server_in_game;
+static int server_sock;
+static ClientList *client = NULL;
+static int clients = 0;
+
+void server_handle_client(ClientList *cli) {
+	Packet pack;
+	Packet response;
+	ClientList *tmp;
+	
+	if(!network_poll_tcp(cli->sock))
+		return;
+	
+	protocol_recv_packet(cli->sock, &pack);
+	
+	switch(pack.type) {
+		case PACKET_TYPE_JOIN:
+			strcpy(cli->name, pack.join.name);
+			
+			response.type = PACKET_TYPE_JOIN;
+			response.size = sizeof(PacketJoin);
+			
+			for(tmp = client; tmp; tmp = tmp->next) {
+				strcpy(response.join.name, tmp->name);
+				response.join.id = tmp->id;
+				protocol_send_packet(cli->sock, &response);
+				
+				if(tmp->sock != cli->sock) {
+					response.join.id = cli->id;
+					strcpy(response.join.name, cli->name);
+					protocol_send_packet(tmp->sock, &response);
+				}
+			}
+			
+			break;
+	}
+}
 
 int server_lobby(void *arg) {
 	PacketLobby pack;
@@ -17,8 +65,21 @@ int server_lobby(void *arg) {
 	strcpy(pack.name, player_name);
 	
 	for(;;) {
+		if(network_poll_tcp(server_sock)) {
+			ClientList *tmp;
+			int sock;
+			
+			sock = network_accept_tcp(server_sock);
+			
+			tmp = malloc(sizeof(ClientList));
+			tmp->sock = sock;
+			tmp->id = clients++;
+			tmp->next = client;
+			client = tmp;
+		}
+		
 		network_broadcast_udp(&pack, pack.size);
-		sleep(2);
+		usleep(100000);
 	}
 	
 	return 0;
@@ -26,6 +87,10 @@ int server_lobby(void *arg) {
 
 void server_start() {
 	server_in_game = false;
+	if((server_sock = network_listen_tcp(PORT + 1)) < 0) {
+		fprintf(stderr, "Server failed to open listening socket\n");
+		exit(1);
+	}
 	d_util_thread_new(server_lobby, NULL);
 }
 
