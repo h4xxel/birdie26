@@ -57,6 +57,9 @@ void ingame_loop() {
 void ingame_client_keyboard() {
 	static struct InGameKeyStateEntry oldstate;
 	struct InGameKeyStateEntry newstate, pressevent, releaseevent;
+
+	memset(&pressevent, 0, sizeof(pressevent));
+	memset(&releaseevent, 0, sizeof(pressevent));
 	
 	newstate.left = d_keys_get().left;
 	newstate.right = d_keys_get().right;
