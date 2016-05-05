@@ -1,0 +1,15 @@
+bin/
+build/
+*.orig
+*.local
+*.remote
+*.o
+*.a
+*.so
+*.swp
+*.swo
+*.ldi
+*.ldmz
+*.res
+*.elf
+*.dll
