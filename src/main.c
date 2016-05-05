@@ -12,6 +12,7 @@
 #include "lobby.h"
 #include "server/server.h"
 #include "network/network.h"
+#include "network/protocol.h"
 #include "main.h"
 #include "camera.h"
 
@@ -19,6 +20,7 @@ Gfx gfx;
 GameState gamestate;
 struct GameStateStruct *s;
 char player_name[NAME_LEN_MAX];
+int server_sock;
 
 void (*state_render[GAME_STATES])()={
 	[GAME_STATE_MENU] = menu_render,
@@ -43,6 +45,24 @@ void restart_to_menu(const char *name) {
 		execl(d_fs_exec_path(), buf, name, NULL);
 	else
 		execl(d_fs_exec_path(), buf, NULL);
+}
+
+int join_game(unsigned long sip) {
+	PacketJoin join;
+	
+	if((server_sock = network_connect_tcp(sip, PORT + 1)) < 0) {
+		fprintf(stderr, "failed to join %lu\n", sip);
+		return -1;
+	}
+
+	join.type = PACKET_TYPE_JOIN;
+	join.size = sizeof(PacketJoin);
+	join.id = 0;
+	memcpy(join.name, player_name, NAME_LEN_MAX);
+	join.name[NAME_LEN_MAX - 1] = 0;
+
+	protocol_send_packet(server_sock, (void *) &join);
+	return 0;
 }
 
 void game_state(GameState state) {
@@ -88,6 +108,9 @@ void game_state(GameState state) {
 			//we_are_hosting_a_game = true;
 			server_start();
 			gameroom.button.start->enabled = true;
+			
+			join_game(network_local_ip());
+			
 			state = GAME_STATE_GAMEROOM;
 		case GAME_STATE_GAMEROOM:
 			ui_listbox_clear(gameroom.list);

@@ -242,6 +242,7 @@ int network_connect_tcp(unsigned long to, int port) {
 	addr.sin_port=htons(port);
 	
 	if(connect(sock, (struct sockaddr *) &addr, sizeof(addr)) < 0) {
+		closesocket(sock);
 		return -1;
 	}
 	
