@@ -7,6 +7,13 @@
 #include "../network/network.h"
 #include "../network/protocol.h"
 
+#define HANDLE_KEY(A) do { \
+		if(pack.keypress.keypress.A ) \
+			ingame_keystate[cli->id].A = 1; \
+		if(pack.keypress.keyrelease.A ) \
+			ingame_keystate[cli->id].A = 0; \
+	} while(0)
+
 int usleep(useconds_t usec);
 
 typedef enum ServerState ServerState;
@@ -61,6 +68,12 @@ void server_handle_client(ClientList *cli) {
 				}
 			}
 			
+			break;
+		
+		case PACKET_TYPE_KEYPRESS:
+			HANDLE_KEY(left);
+			HANDLE_KEY(right);
+			HANDLE_KEY(jump);
 			break;
 	}
 }
