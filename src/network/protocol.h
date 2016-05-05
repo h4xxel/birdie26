@@ -51,4 +51,7 @@ union Packet {
 	uint8_t raw[512];
 };
 
+int protocol_send_packet(int sock, Packet *pack);
+int protocol_recv_packet(int sock, Packet *pack);
+
 #endif
