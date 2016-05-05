@@ -45,9 +45,9 @@ static SOCKET sock_lobby = -1;
 static int port_lobby;
 
 unsigned long network_local_ip() {
-	struct in_addr addr;
-	inet_pton(AF_INET, "127.0.0.1", &addr);
-	return addr.s_addr;
+	struct hostent *host;
+	host = gethostbyname("127.0.0.1");
+	return (*((struct in_addr **) (host->h_addr_list)))->s_addr;
 }
 
 int network_poll_udp() {
