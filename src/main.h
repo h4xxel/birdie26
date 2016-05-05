@@ -1,6 +1,7 @@
 #ifndef __MAIN_H__
 #define __MAIN_H__
 
+#include <stdbool.h>
 #include <darnit/darnit.h>
 
 #define DISPLAY_WIDTH 640
@@ -43,6 +44,7 @@ extern int server_sock;
 
 struct GameStateStruct {
 	int	player_id;
+	bool is_host;
 	MOVABLE			movable;
 	DARNIT_MAP		*active_level;
 	BULLET			bullet;

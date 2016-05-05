@@ -10,6 +10,7 @@ enum PacketType {
 	PACKET_TYPE_LOBBY,
 	PACKET_TYPE_JOIN,
 	PACKET_TYPE_START,
+	PACKET_TYPE_MOVE_OBJECT,
 	PACKET_TYPE_EXIT,
 };
 
@@ -49,14 +50,13 @@ union Packet {
 	struct {
 		uint16_t type;
 		uint16_t size;
+		uint8_t raw[512];
 	};
 	
 	PacketLobby lobby;
 	PacketJoin join;
 	PacketStart start;
 	PacketExit exit;
-	
-	uint8_t raw[512];
 };
 
 int protocol_send_packet(int sock, Packet *pack);

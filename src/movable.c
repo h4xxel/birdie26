@@ -257,7 +257,7 @@ int movableGravity(MOVABLE_ENTRY *entry) {
 
 void movableLoop() {
 	int i, j, h_x, h_y, h_w, h_h, res;
-	bool master = true; // TODO: Set this accordingly
+	bool master = s->is_host;
 
 	res = d_bbox_test(s->movable.bbox, 0, 0, INT_MAX, INT_MAX, s->movable.coll_buf, ~0);
 

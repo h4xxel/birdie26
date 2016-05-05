@@ -17,5 +17,6 @@ struct InGameKeyStateEntry {
 
 extern struct InGameKeyStateEntry ingame_keystate[PLAYER_CAP];
 
+void ingame_network_handler();
 
 #endif

@@ -3,6 +3,9 @@
 #include "camera.h"
 #include "util.h"
 #include <stdbool.h>
+#include "network/network.h"
+#include "network/protocol.h"
+#include "server/server.h"
 
 struct InGameKeyStateEntry ingame_keystate[PLAYER_CAP];
 
@@ -33,7 +36,12 @@ void ingame_loop() {
 	int i;
 
 	d_render_tint(255, 255, 255, 255);
+	
 	movableLoop();
+	
+	if(s->is_host)
+		server_kick();
+	
 	camera_work();
 	d_map_camera_move(s->active_level, s->camera.x, s->camera.y);
 	for (i = 0; i < s->active_level->layers; i++) {
@@ -68,4 +76,31 @@ void ingame_client_keyboard() {
 	/* TODO: Need to send this to the serb */
 
 	oldstate = newstate;
+}
+
+void ingame_network_handler() {
+	Packet pack;
+	void *p;
+	int i;
+	
+	if(!network_poll_tcp(server_sock))
+		return;
+	
+	protocol_recv_packet(server_sock, &pack);
+	
+	switch(pack.type) {
+		case PACKET_TYPE_MOVE_OBJECT:
+			p = pack.raw;
+			
+			for(i = 0; i < s->movable.movables; i++) {
+				s->movable.movable[i].x = ((int) (*((uint16_t *) p))) * 1000;
+				p+= 2;
+				s->movable.movable[i].y = ((int) (*((uint16_t *) p))) * 1000;
+				p+= 2;
+				s->movable.movable[i].direction = *((uint8_t *) p);
+				p+= 1;
+			}
+			
+			break;
+	}
 }

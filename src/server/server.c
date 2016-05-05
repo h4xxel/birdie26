@@ -30,6 +30,7 @@ static ClientList *client = NULL;
 static int clients = 0;
 static volatile ServerState server_state;
 
+DARNIT_SEMAPHORE *sem;
 
 void server_handle_client(ClientList *cli) {
 	Packet pack;
@@ -66,7 +67,10 @@ void server_handle_client(ClientList *cli) {
 
 int server_thread(void *arg) {
 	PacketLobby pack;
+	Packet move;
 	ClientList *tmp;
+	void *p;
+	int i;
 	
 	pack.type = PACKET_TYPE_LOBBY;
 	pack.size = sizeof(PacketLobby);
@@ -111,10 +115,27 @@ int server_thread(void *arg) {
 				break;
 				
 			case SERVER_STATE_GAME:
+				d_util_semaphore_wait(sem);
+				
+				move.type = PACKET_TYPE_MOVE_OBJECT;
+				move.size = 4 + s->movable.movables*5;
+				p = move.raw;
+				
+				for(i = 0; i < s->movable.movables; i++) {
+					*((uint16_t *) p) = (s->movable.movable[i].x)/1000;
+					p+= 2;
+					*((uint16_t *) p) = (s->movable.movable[i].y)/1000;
+					p+= 2;
+					*((uint8_t *) p) = s->movable.movable[i].direction;
+					p+= 1;
+				}
+				
+				for(tmp = client; tmp; tmp = tmp->next)
+					protocol_send_packet(tmp->sock, &move);
+				
 				for(tmp = client; tmp; tmp = tmp->next)
 					server_handle_client(tmp);
 				
-				sleep(1);
 				break;
 		}
 	}
@@ -123,6 +144,7 @@ int server_thread(void *arg) {
 }
 
 void server_start() {
+	sem = d_util_semaphore_new(0);
 	server_state = SERVER_STATE_LOBBY;
 	if((listen_sock = network_listen_tcp(PORT + 1)) < 0) {
 		fprintf(stderr, "Server failed to open listening socket\n");
@@ -134,4 +156,8 @@ void server_start() {
 
 void server_start_game() {
 	server_state = SERVER_STATE_STARTING;
+}
+
+void server_kick() {
+	d_util_semaphore_add(sem, 1);
 }

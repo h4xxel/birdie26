@@ -31,6 +31,7 @@ void (*state_render[GAME_STATES])()={
 };
 
 void (*state_network_handler[GAME_STATES])()={
+	[GAME_STATE_GAME] = ingame_network_handler,
 	[GAME_STATE_GAMEROOM] = gameroom_network_handler,
 	[GAME_STATE_LOBBY] = lobby_network_handler,
 };
@@ -104,14 +105,14 @@ void game_state(GameState state) {
 			break;
 		case GAME_STATE_LOBBY:
 			//gameroom.button.start->enabled = false;
-			//we_are_hosting_a_game = false;
+			s->is_host = false;
 			//ui_listbox_clear(lobby.list);
 			break;
 		case GAME_STATE_ENTER_IP:
 			ui_selected_widget = enter_ip.entry;
 			break;
 		case GAME_STATE_HOST:
-			//we_are_hosting_a_game = true;
+			s->is_host = true;
 			server_start();
 			gameroom.button.start->enabled = true;
 			
@@ -131,6 +132,7 @@ void game_state(GameState state) {
 	gamestate=state;
 }
 
+#include <stddef.h>
 int main(int argc, char  **argv) {
 	char font_path[512];
 	
