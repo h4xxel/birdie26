@@ -206,7 +206,7 @@ int network_accept_tcp(int listensock) {
 		return -1;
 	}
 	#else
-	int mode = 1;
+	u_long mode = 1;
 	ioctlsocket(sock, FIONBIO, &mode);
 	#endif
 	setsockopt(sock, IPPROTO_TCP, SO_LINGER, NULL, 0);
