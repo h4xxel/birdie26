@@ -7,6 +7,9 @@
 #include <darnit/darnit.h>
 #include "ui/ui.h"
 #include "menu.h"
+#include "gameroom.h"
+#include "lobby.h"
+#include "network/network.h"
 #include "main.h"
 
 Gfx gfx;
@@ -22,8 +25,8 @@ void (*state_render[GAME_STATES])()={
 };
 
 void (*state_network_handler[GAME_STATES])()={
-//	[GAME_STATE_GAMEROOM] = gameroom_network_handler,
-//	[GAME_STATE_LOBBY] = lobby_network_handler,
+	[GAME_STATE_GAMEROOM] = gameroom_network_handler,
+	[GAME_STATE_LOBBY] = lobby_network_handler,
 };
 
 struct UI_PANE_LIST *gamestate_pane[GAME_STATES];
@@ -117,16 +120,18 @@ int main(int argc, char  **argv) {
 	
 	ui_init(4);
 	menu_init();
+	gameroom_init();
+	lobby_init();
 	
 	gamestate_pane[GAME_STATE_MENU] = &menu.pane;
 	gamestate_pane[GAME_STATE_SELECT_NAME] = &select_name.pane;
-	//gamestate_pane[GAME_STATE_LOBBY] = &lobby.pane;
-	//gamestate_pane[GAME_STATE_GAMEROOM] = &gameroom.pane;
+	gamestate_pane[GAME_STATE_LOBBY] = &lobby.pane;
+	gamestate_pane[GAME_STATE_GAMEROOM] = &gameroom.pane;
 	//gamestate_pane[GAME_STATE_GAME_OVER] = &game_over.pane;
 	
 	
 	signal(SIGINT, d_quit); //lol
-	//network_init(PORT);
+	network_init(PORT);
 	
 	d_cursor_show(1);
 	

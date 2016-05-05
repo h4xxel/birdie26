@@ -206,15 +206,17 @@ int network_accept_tcp(int listensock) {
 		return -1;
 	}
 	#else
-	ioctlsocket(sock, FIONBIO, &iMode);
+	int mode = 1;
+	ioctlsocket(sock, FIONBIO, &mode);
 	#endif
 	setsockopt(sock, IPPROTO_TCP, SO_LINGER, NULL, 0);
 
 	return sock;
 }
 
-int network_connect_tcp(const char *host, int port) {
+int network_connect_tcp(const char *host_ip, int port) {
 	int sock;
+	struct hostent *host;
 	struct sockaddr_in addr = {
 		.sin_family = AF_INET,
 	};
@@ -222,7 +224,8 @@ int network_connect_tcp(const char *host, int port) {
 	if((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
 		return -1;
 	
-	inet_pton(AF_INET, host, &addr.sin_addr);
+	host = gethostbyname(host_ip);
+	addr.sin_addr = **((struct in_addr **) (host->h_addr_list));
 	addr.sin_port=htons(port);
 	
 	if(connect(sock, (struct sockaddr *) &addr, sizeof(addr)) < 0) {
