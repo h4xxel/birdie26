@@ -50,6 +50,7 @@ void gameroom_network_handler() {
 		
 		case PACKET_TYPE_START:
 			s->player_id = pack.start.player_id;
+			printf("Started game as player %i", s->player_id);
 			game_state(GAME_STATE_GAME);
 			break;
 	}
