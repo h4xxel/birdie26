@@ -2,5 +2,6 @@
 #define __SERVER_H__
 
 void server_start();
+void server_start_game();
 
 #endif

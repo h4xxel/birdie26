@@ -1,9 +1,12 @@
 #include <string.h>
 #include <unistd.h>
+#include <stdbool.h>
 #include <darnit/darnit.h>
 #include "../main.h"
 #include "../network/network.h"
 #include "../network/protocol.h"
+
+bool server_in_game;
 
 int server_lobby(void *arg) {
 	PacketLobby pack;
@@ -22,5 +25,11 @@ int server_lobby(void *arg) {
 }
 
 void server_start() {
+	server_in_game = false;
 	d_util_thread_new(server_lobby, NULL);
+}
+
+
+void server_start_game() {
+	server_in_game = true;
 }
