@@ -58,20 +58,19 @@ void lobby_network_handler() {
 	ip = network_recv_udp(&pack, sizeof(PacketLobby));
 	if(pack.type != PACKET_TYPE_LOBBY)
 		return;
-	if(pack.lobby.begin == 3) {
-		v = lobby.list->get_prop(lobby.list, UI_LISTBOX_PROP_SIZE);
-		for(i = 0; i < v.i; i++) {
-			s = ui_listbox_get(lobby.list, i);
-			if(strtoul(s, NULL, 10) == ip) {
-				if(strstr(s, "Unknown")) {
-					sprintf(name, "%lu: %s", ip, pack.lobby.name);
-					ui_listbox_set(lobby.list, i, name);
-					return;
-				} else
-					return;
-			}
+	
+	v = lobby.list->get_prop(lobby.list, UI_LISTBOX_PROP_SIZE);
+	for(i = 0; i < v.i; i++) {
+		s = ui_listbox_get(lobby.list, i);
+		if(strtoul(s, NULL, 10) == ip) {
+			if(strstr(s, "Unknown")) {
+				sprintf(name, "%lu: %s", ip, pack.lobby.name);
+				ui_listbox_set(lobby.list, i, name);
+				return;
+			} else
+				return;
 		}
-		sprintf(name, "%lu: %s", ip, pack.lobby.name);
-		ui_listbox_add(lobby.list, name);
 	}
+	sprintf(name, "%lu: %s", ip, pack.lobby.name);
+	ui_listbox_add(lobby.list, name);
 }

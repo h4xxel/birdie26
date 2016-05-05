@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <libgen.h>
 #include <signal.h>
+#include <stdbool.h>
 #include <darnit/darnit.h>
 #include "ui/ui.h"
 #include "menu.h"
@@ -82,11 +83,11 @@ void game_state(GameState state) {
 			break;
 		case GAME_STATE_HOST:
 			//we_are_hosting_a_game = true;
-			//server_start();
-			//gameroom.button.start->enabled = true;
-			//state = GAME_STATE_GAMEROOM;
+			server_start();
+			gameroom.button.start->enabled = true;
+			state = GAME_STATE_GAMEROOM;
 		case GAME_STATE_GAMEROOM:
-			//ui_listbox_clear(gameroom.list);
+			ui_listbox_clear(gameroom.list);
 		case GAME_STATE_GAME_OVER:
 		case GAME_STATE_QUIT:
 			d_input_release();
