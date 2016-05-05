@@ -11,7 +11,7 @@
 
 Gfx gfx;
 GameState gamestate;
-char player_name[NAME_LEN_MAX + 1];
+char player_name[NAME_LEN_MAX];
 
 void (*state_render[GAME_STATES])()={
 	[GAME_STATE_MENU] = menu_render,

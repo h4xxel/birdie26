@@ -1,6 +1,8 @@
 #ifndef __MAIN_H__
 #define __MAIN_H__
 
+#include <darnit/darnit.h>
+
 #define DISPLAY_WIDTH 640
 #define DISPLAY_HEIGHT 480
 //1338 för oss som är lite bättre
@@ -33,5 +35,6 @@ extern Gfx gfx;
 extern char player_name[];
 
 void game_state(GameState state);
+void restart_to_menu(const char *name);
 
 #endif
