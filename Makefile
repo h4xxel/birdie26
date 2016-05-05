@@ -19,6 +19,8 @@ all: bin $(SUBDIRS) $(TARGET)
 	@$(CC) -o bin/$(BINFILE)$(BINEXT) $(CFLAGS) -Wl,--whole-archive $(addsuffix /out.a,$(SRCDIRS)) -Wl,--no-whole-archive $(LDFLAGS)
 	@$(CP) -R res bin/
 	
+	@darnit-tmxconv res_precursor/arne.tmx bin/res/arne.ldmz
+	
 	@echo "Build complete."
 	@echo 
 
