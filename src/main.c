@@ -10,6 +10,7 @@
 #include "menu.h"
 #include "gameroom.h"
 #include "lobby.h"
+#include "server/server.h"
 #include "network/network.h"
 #include "main.h"
 #include "camera.h"
@@ -56,7 +57,7 @@ void game_state(GameState state) {
 		case GAME_STATE_HOST:
 		case GAME_STATE_LOBBY:
 			break;
-		case GAME_STATE_GAMEROOM:;
+		case GAME_STATE_GAMEROOM:
 			break;
 		case GAME_STATE_GAME_OVER:
 		case GAME_STATE_QUIT:

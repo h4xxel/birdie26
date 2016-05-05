@@ -158,8 +158,10 @@ int network_listen_tcp(int port) {
 	
 	struct sockaddr_in addr;
 	
-	if((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+	if((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+		printf("socket");
 		return -1;
+	}
 	
 	flags = 1;
 	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (void *) &flags, 4);
@@ -169,10 +171,13 @@ int network_listen_tcp(int port) {
 	addr.sin_port = htons(port);
 	addr.sin_addr.s_addr = 0;
 
-	if(bind(sock, (struct sockaddr *) &addr, sizeof(addr)) < 0)
+	if(bind(sock, (struct sockaddr *) &addr, sizeof(addr)) < 0) {
+		printf("bind\n");
 		return -1;
+	}
 	
 	if(listen(sock, 2) < 0) {
+		printf("listen\n");
 		closesocket(sock);
 		return -1;
 	}

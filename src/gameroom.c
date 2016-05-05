@@ -1,5 +1,6 @@
 #include <darnit/darnit.h>
 #include "ui/ui.h"
+#include "server/server.h"
 #include "main.h"
 #include "gameroom.h"
 #include "main.h"
