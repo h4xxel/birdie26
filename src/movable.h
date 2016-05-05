@@ -10,7 +10,7 @@
 #define	COLLISION_KILL		0x100000
 #define	COLLISION_CHECKPOINT	0x200000
 
-#define	MOV_TERMINAL_VELOCITY	400
+#define	MOV_TERMINAL_VELOCITY	4000
 #define	MOV_GRAVITY_STRONG	2000
 #define	MOV_GRAVITY_WEAK	1000
 
@@ -32,6 +32,7 @@ typedef struct {
 
 
 typedef struct {
+	int			id;
 	int			bbox;
 	DARNIT_SPRITE		*sprite;
 	int			x;

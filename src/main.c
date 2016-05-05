@@ -11,6 +11,7 @@
 #include "lobby.h"
 #include "network/network.h"
 #include "main.h"
+#include "camera.h"
 
 Gfx gfx;
 GameState gamestate;
@@ -115,7 +116,7 @@ int main(int argc, char  **argv) {
 	s->camera.follow = -1;
 	s->camera.x = s->camera.y = 0;
 	movableInit();
-	//bulletInit();
+	bulletInit();
 	movableLoad();
 	
 	ui_init(4);
@@ -155,9 +156,13 @@ int main(int argc, char  **argv) {
 
 		/* XXX: Testcode */ {
 			int i;
+			d_render_tint(255, 255, 255, 255);
 			movableLoop();
+			camera_work();
+			d_map_camera_move(s->active_level, s->camera.x, s->camera.y);
 			for (i = 0; i < s->active_level->layers; i++) {
 				d_tilemap_draw(s->active_level->layer[i].tilemap);
+				d_render_offset(s->camera.x, s->camera.y);
 				movableLoopRender(i);
 			}
 		}

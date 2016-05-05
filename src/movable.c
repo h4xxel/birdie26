@@ -31,6 +31,7 @@ void movableSpawn() {
 		s->movable.movable[i].gravity_effect = 0;
 		s->movable.movable[i].x_velocity = 0;
 		s->movable.movable[i].y_velocity = 1;
+		s->movable.movable[i].id = i;
 		d_sprite_hitbox(s->movable.movable[i].sprite, &h_x, &h_y, &h_w, &h_h);
 		d_bbox_add(s->movable.bbox, s->movable.movable[i].x / 1000 + h_x, s->movable.movable[i].x / 1000 + h_x, h_w, h_h);
 		if (s->movable.movable[i].ai)
@@ -255,7 +256,7 @@ int movableGravity(MOVABLE_ENTRY *entry) {
 
 void movableLoop() {
 	int i, j, h_x, h_y, h_w, h_h, res;
-	bool master = false; // TODO: Set this accordingly
+	bool master = true; // TODO: Set this accordingly
 
 	res = d_bbox_test(s->movable.bbox, 0, 0, INT_MAX, INT_MAX, s->movable.coll_buf, ~0);
 

@@ -9,7 +9,7 @@ void bulletLoadTypes() {
 	int i, num[7];
 	char buff[2048];
 	
-	f = d_file_open("assets/bullets.lst", "rb");
+	f = d_file_open("res/bullets.lst", "rb");
 	s->bullet.type = NULL;
 	s->bullet.types = 0;
 
@@ -31,7 +31,7 @@ void bulletLoadTypes() {
 	s->bullet.types = i;
 	d_file_close(f);
 
-	f = d_file_open("assets/bullets.dmg", "rb");
+	f = d_file_open("res/bullets.dmg", "rb");
 	s->bullet.dmg = malloc(sizeof(int) * i * i);
 	for (i = 0; i < s->bullet.types; i++) {
 		d_file_gets(buff, 2048, f);
@@ -56,7 +56,7 @@ void bulletInit() {
 	s->bullet.b = malloc(sizeof(BULLET_ENTRY) * BULLET_CAP);
 	memset(s->bullet.b, 0, sizeof(BULLET_ENTRY) * BULLET_CAP);
 	s->bullet.bs = BULLET_CAP;
-	s->bullet.ts = d_render_tilesheet_load("assets/bullets.png", 32, 32, DARNIT_PFORMAT_RGB5A1);
+	s->bullet.ts = d_render_tilesheet_load("res/bullets.png", 32, 32, DARNIT_PFORMAT_RGB5A1);
 	s->bullet.tc = d_render_tile_new(BULLET_CAP, s->bullet.ts);
 	s->bullet.bbox = d_bbox_new(BULLET_CAP);
 	s->bullet.btest = malloc(sizeof(int) * BULLET_CAP);
