@@ -57,6 +57,7 @@ void server_handle_client(ClientList *cli) {
 			response.size = sizeof(PacketJoin);
 			
 			for(tmp = client; tmp; tmp = tmp->next) {
+				memset(response.join.name, 0, NAME_LEN_MAX);
 				strcpy(response.join.name, tmp->name);
 				response.join.id = tmp->id;
 				protocol_send_packet(cli->sock, &response);
@@ -85,11 +86,6 @@ int server_thread(void *arg) {
 	void *p;
 	int i;
 	
-	pack.type = PACKET_TYPE_LOBBY;
-	pack.size = sizeof(PacketLobby);
-	
-	strcpy(pack.name, player_name);
-	
 	for(;;) {
 		switch(server_state) {
 			case SERVER_STATE_LOBBY:
@@ -107,6 +103,12 @@ int server_thread(void *arg) {
 				
 				for(tmp = client; tmp; tmp = tmp->next)
 					server_handle_client(tmp);
+				
+				
+				pack.type = PACKET_TYPE_LOBBY;
+				pack.size = sizeof(PacketLobby);
+				memset(pack.name, 0, NAME_LEN_MAX);
+				strcpy(pack.name, player_name);
 				
 				network_broadcast_udp(&pack, pack.size);
 				usleep(100000);
