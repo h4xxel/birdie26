@@ -49,6 +49,7 @@ void gameroom_network_handler() {
 			break;
 		
 		case PACKET_TYPE_START:
+			s->player_id = pack.start.player_id;
 			game_state(GAME_STATE_GAME);
 			break;
 	}
