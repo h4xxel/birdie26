@@ -15,6 +15,7 @@
 #include "network/protocol.h"
 #include "main.h"
 #include "camera.h"
+#include "ingame.h"
 
 Gfx gfx;
 GameState gamestate;
@@ -24,7 +25,7 @@ int server_sock;
 
 void (*state_render[GAME_STATES])()={
 	[GAME_STATE_MENU] = menu_render,
-//	[GAME_STATE_GAME] = game_render,
+	[GAME_STATE_GAME] = ingame_loop,
 	[GAME_STATE_SELECT_NAME] = NULL,
 //	[GAME_STATE_GAME_OVER] = game_over_render,
 };
@@ -88,6 +89,7 @@ void game_state(GameState state) {
 	//Game state constructors
 	switch(state) {
 		case GAME_STATE_GAME:
+			ingame_init();
 			//init game shit
 			//pthread_create(&game.thread, NULL, object_thread, NULL);
 			#ifndef __DEBUG__

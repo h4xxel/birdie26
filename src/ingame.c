@@ -7,14 +7,25 @@
 struct InGameKeyStateEntry ingame_keystate[PLAYER_CAP];
 
 void ingame_init() {
+	int i, player_id;
+	const char *playerid_str;
 	/* Leak *all* the memory */
 	s->active_level = d_map_load(util_binrel_path("res/arne.ldmz"));
-	s->camera.follow = -1;	/* TODO: Replace with object ID for our player number */
+	s->camera.follow = -1;
 	s->camera.x = s->camera.y = 0;
 
 	movableInit();
 	bulletInit();
 	movableLoad();
+
+	for (i = 0; i < s->movable.movables; i++) {
+		if (!(playerid_str = d_map_prop(s->active_level->object[i].ref, "player_id")))
+			continue;
+		if (atoi(playerid_str) == 1) {	// TODO: Replace with clients player ID */
+			s->camera.follow = i;
+			break;
+		}
+	}
 }
 
 

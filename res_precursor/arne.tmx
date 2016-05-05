@@ -51,7 +51,29 @@
   <object name="player" type="npc" x="128" y="128" width="32" height="32">
    <properties>
     <property name="ai" value="player"/>
+    <property name="player_id" value="1"/>
     <property name="sprite" value="res/player.spr"/>
+   </properties>
+  </object>
+  <object name="player2" type="npc" x="256" y="128" width="32" height="32">
+   <properties>
+    <property name="ai" value="player"/>
+    <property name="player_id" value="2"/>
+    <property name="sprite" value="res/player2.spr"/>
+   </properties>
+  </object>
+  <object name="player3" type="npc" x="544" y="128" width="32" height="32">
+   <properties>
+    <property name="ai" value="player"/>
+    <property name="player_id" value="3"/>
+    <property name="sprite" value="res/player3.spr"/>
+   </properties>
+  </object>
+  <object name="player4" type="npc" x="640" y="128" width="32" height="32">
+   <properties>
+    <property name="ai" value="player"/>
+    <property name="player_id" value="4"/>
+    <property name="sprite" value="res/player4.spr"/>
    </properties>
   </object>
  </objectgroup>

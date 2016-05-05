@@ -20,7 +20,8 @@ void ai_player(void *dummy, void *entry, MOVABLE_MSG msg) {
 		case MOVABLE_MSG_INIT:
 			self->hp = self->hp_max = 400;
 			self->gravity_effect = 1;
-			s->camera.follow = self->id;
+			if (player_id >= PLAYER_CAP)	// TODO: replace PLAYER_CAP with actual number of connected players //
+				self->hp = 0;
 			break;
 		case MOVABLE_MSG_LOOP:
 			if (ingame_keystate[player_id].left)
