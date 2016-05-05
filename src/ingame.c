@@ -21,7 +21,7 @@ void ingame_init() {
 	for (i = 0; i < s->movable.movables; i++) {
 		if (!(playerid_str = d_map_prop(s->active_level->object[i].ref, "player_id")))
 			continue;
-		if (atoi(playerid_str) == 1) {	// TODO: Replace with clients player ID */
+		if (atoi(playerid_str) == s->player_id) {
 			s->camera.follow = i;
 			break;
 		}
