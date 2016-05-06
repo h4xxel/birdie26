@@ -175,12 +175,12 @@ void ui_button_resize(UI_WIDGET *widget, int x, int y, int w, int h) {
 
 	d_render_line_move(p->border, 0, x, y, x + w - 1, y);
 	d_render_line_move(p->border, 1, x, y + h, x + w - 1, y + h);
-	d_render_line_move(p->border, 2, x, y, x, y + h - 1);
-	d_render_line_move(p->border, 3, x + w, y, x + w, y + h - 1);
+	d_render_line_move(p->border, 2, x, y + 1, x, y + h);
+	d_render_line_move(p->border, 3, x + w, y + 1, x + w, y + h);
 	d_render_line_move(p->border, 4, x + 2, y + 2, x + w - 3, y + 2);
 	d_render_line_move(p->border, 5, x + 2, y + h - 2, x + w - 3, y + h - 2);
-	d_render_line_move(p->border, 6, x + 2, y + 2, x + 2, y + h - 3);
-	d_render_line_move(p->border, 7, x + w - 2, y + 2, x + w - 2, y + h - 3);
+	d_render_line_move(p->border, 6, x + 2, y + 3, x + 2, y + h - 2);
+	d_render_line_move(p->border, 7, x + w - 2, y + 3, x + w - 2, y + h - 2);
 
 	d_render_line_move(p->active_border, 0, x, y + 1, x + w - 1, y + 1);
 	d_render_line_move(p->active_border, 1, x, y + h - 1, x + w - 1, y + h - 1);
