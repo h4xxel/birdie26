@@ -25,3 +25,15 @@ T 200 22
 T 200 23
 T 200 24
 E
+
+# Pull left
+D
+T 100 26
+T 100 27
+E
+
+# Pull right
+D
+T 100 28
+T 100 29
+E
