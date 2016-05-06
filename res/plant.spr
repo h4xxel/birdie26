@@ -23,22 +23,23 @@ D
 T 200 7
 E
 
-# Potato (3)
-D
-T 200 8
-E
-
-# Carrot (4)
+# Carrot (3)
 D
 T 200 9
 E
 
-# Rutabaga (5)
+# Potato (4)
+D
+T 200 8
+E
+
+# Onion (5)
+D
+T 200 11
+E
+
+# Rutabaga (6)
 D
 T 200 10
 E
 
-# Onion (6)
-D
-T 200 11
-E
