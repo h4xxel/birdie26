@@ -8,6 +8,8 @@
 #include "network/network.h"
 #include "network/protocol.h"
 #include "server/server.h"
+#include "gameover.h"
+#include "main.h"
 
 struct InGameKeyStateEntry ingame_keystate[PLAYER_CAP];
 
@@ -149,6 +151,11 @@ void ingame_network_handler() {
 				p += 2;
 			}
 			
+			break;
+		
+		case PACKET_TYPE_EXIT:
+			game_over_set_player(pack.exit.player, pack.exit.name);
+			game_state(GAME_STATE_GAME_OVER);
 			break;
 	}
 }
