@@ -3,19 +3,60 @@
 #include "ingame.h"
 #include "main.h"
 #include <string.h>
+#include <stdlib.h>
 
+
+static int _get_player_id(MOVABLE_ENTRY *self) {
+	/* On a scale of 1 to italy, how inefficient is this? */
+	const char *playerid_str;
+	if (!(playerid_str = d_map_prop(s->active_level->object[self->id].ref, "player_id")))
+		return 0;
+	return atoi(playerid_str) - 1;
+}
+
+
+static int _player_direction(MOVABLE_ENTRY *self) {
+	int player_id;
+
+	player_id = _get_player_id(self);
+	if (player_id < 0 || player_id >= PLAYER_CAP)
+		return 0;
+	return s->player[player_id].last_walk_direction;
+}
+
+
+static int _player_fix_hitbox(MOVABLE_ENTRY *self) {
+	int dir, box1_x, box2_x, box1_y, box2_y, box1_w, box2_w, box1_h, box2_h, diff;
+	if ((movableTileCollision(self, 0, 0) & COLLISION_KILL) || (movableTileCollision(self, 0, -2) & COLLISION_KILL) || (movableTileCollision(self, -2, 0) & COLLISION_KILL) || (movableTileCollision(self, -2, -2) & COLLISION_KILL));
+	// TODO: Do something with this //
+	
+	dir = _player_direction(self);
+	if (dir == self->direction)
+		return 0;
+	d_sprite_hitbox(self->sprite, &box1_x, &box1_y, &box1_w, &box1_h);
+	d_sprite_direction_set(self->sprite, dir);
+	d_sprite_hitbox(self->sprite, &box2_x, &box2_y, &box2_w, &box2_h);
+	diff = (((box2_y + box2_h) - (box1_y + box1_h)));
+	self->y -= (diff * 1000);
+
+	diff = (box2_x - box1_x);
+	if (movableTileCollision(self, -1, -1) & COLLISION_RIGHT)
+		self->x += abs(diff * 1000);
+	else {
+		if (movableTileCollision(self, 1, 1) & COLLISION_LEFT)
+			self->x -= abs(diff * 2000);
+	}
+
+	return 1;
+}
 
 
 void ai_player(void *dummy, void *entry, MOVABLE_MSG msg) {
 	MOVABLE_ENTRY *self = entry;
 	int player_id;
-	char *playerid_str;
 	
-	/* On a scale of 1 to italy, how inefficient is this? */
-	if (!(playerid_str = d_map_prop(s->active_level->object[self->id].ref, "player_id")))
-		return self->hp = 0, (void) 0;
-	player_id = atoi(playerid_str) - 1;
-	
+	player_id = _get_player_id(self);
+
 	switch (msg) {
 		case MOVABLE_MSG_INIT:
 			self->hp = self->hp_max = 400;
@@ -24,11 +65,15 @@ void ai_player(void *dummy, void *entry, MOVABLE_MSG msg) {
 				self->hp = 0;
 			break;
 		case MOVABLE_MSG_LOOP:
-			if (ingame_keystate[player_id].left)
+			if (_player_fix_hitbox(self))
+				break;
+			if (ingame_keystate[player_id].left) {
 				self->x_velocity = -400;
-			else if (ingame_keystate[player_id].right)
+				s->player[player_id].last_walk_direction = 0;
+			} else if (ingame_keystate[player_id].right) {
 				self->x_velocity = 400;
-			else
+				s->player[player_id].last_walk_direction = 1;
+			} else
 				self->x_velocity = 0;
 			if (ingame_keystate[player_id].jump) {
 				DARNIT_KEYS keys;
@@ -38,6 +83,8 @@ void ai_player(void *dummy, void *entry, MOVABLE_MSG msg) {
 				if (!self->y_velocity)
 					self->y_velocity = -600;
 			}
+
+			self->direction = _player_direction(self);
 			break;
 		default:
 			break;
