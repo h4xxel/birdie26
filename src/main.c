@@ -202,6 +202,9 @@ int main(int argc, char  **argv) {
 		d_render_tint(255, 255, 255, 255);
 		if(state_render[gamestate])
 			state_render[gamestate]();
+		
+		if(state_network_handler[gamestate])
+			state_network_handler[gamestate]();
 	
 		d_render_end();
 		d_loop();

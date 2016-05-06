@@ -80,6 +80,17 @@ void server_handle_client(ClientList *cli) {
 	}
 }
 
+
+void handle_client_thread() {
+	for (;;) {
+		struct ClientList *tmp;
+		for(tmp = client; tmp; tmp = tmp->next)
+			server_handle_client(tmp);
+		usleep(1000);
+	}
+}
+
+
 int server_thread(void *arg) {
 	PacketLobby pack;
 	Packet move;
@@ -128,6 +139,7 @@ int server_thread(void *arg) {
 				}
 				
 				server_state = SERVER_STATE_GAME;
+				d_util_thread_new(handle_client_thread, NULL);
 				break;
 				
 			case SERVER_STATE_GAME:
