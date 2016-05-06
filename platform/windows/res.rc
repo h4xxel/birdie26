@@ -6,12 +6,12 @@ BEGIN
 	BEGIN
 		BLOCK "080904E4"
 		BEGIN
-			VALUE "FileDescription", ""
+			VALUE "FileDescription", "Fascister i grönsakslandet"
 			VALUE "FileVersion", "1.0"
-			VALUE "InternalName", "birdie26"
+			VALUE "InternalName", "Fascister i grönsakslandet"
 			VALUE "LegalCopyright", "//actung fulkod"
-			VALUE "OriginalFilename", "birdie26.exe"
-			VALUE "ProductName", "birdie26"
+			VALUE "OriginalFilename", "gronsak.exe"
+			VALUE "ProductName", "Fascister i grönsakslandet"
 			VALUE "ProductVersion", "1.0"
 		END
 	END

@@ -2,7 +2,7 @@
 MAKEFLAGS	+=	--no-print-directory
 
 #Binaries
-BINFILE		=	birdie26
+BINFILE		=	gronsak
 
 #General flags
 LDFLAGS		+= -ldarnit_s -lm -lmodplug -lbz2

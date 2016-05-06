@@ -139,12 +139,13 @@ void game_state(GameState state) {
 #include <stddef.h>
 int main(int argc, char  **argv) {
 	char font_path[512];
+	char *tmp;
 	
 	d_init_custom("Fascister i grönsakslandet ~ //achtung fulkod", DISPLAY_WIDTH, DISPLAY_HEIGHT, 0, "birdie26", NULL);
 	
 	sprintf(font_path, "%s", d_fs_exec_path());
-	chdir(dirname(font_path));
-	sprintf(font_path, "%s/res/font.ttf", dirname(font_path));
+	chdir(tmp = dirname(font_path));
+	sprintf(font_path, "%s/res/font.ttf", tmp);
 	gfx.font.large = d_font_load(font_path, 40, 256, 256);
 	gfx.font.small = d_font_load(font_path, 16, 256, 256);
 	s = malloc(sizeof(*s));

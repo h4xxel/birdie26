@@ -28,7 +28,7 @@ release:
 	@+make all
 	@$(MKDIR) release/$(BINFILE)
 	@$(CP) -R bin/$(BINFILE)$(BINEXT) release/$(BINFILE)/
-	@$(CP) -R res release/$(BINFILE)/
+	@$(CP) -R bin/res release/$(BINFILE)/
 	@$(TARGET)strip release/$(BINFILE)/$(BINFILE)$(BINEXT)
 	
 package: release
