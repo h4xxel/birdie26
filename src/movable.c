@@ -29,6 +29,7 @@ void movableSpawn() {
 		s->movable.movable[i].y = s->active_level->object[i].y * 1000 * s->active_level->layer->tile_h;
 		s->movable.movable[i].l = s->active_level->object[i].l;
 		s->movable.movable[i].direction = 0;
+		s->movable.movable[i].angle = 0;
 		s->movable.movable[i].gravity_effect = 0;
 		s->movable.movable[i].x_velocity = 0;
 		s->movable.movable[i].y_velocity = 1;
@@ -274,6 +275,8 @@ void movableLoop() {
 			d_sprite_direction_set(s->movable.movable[i].sprite, s->movable.movable[i].direction);
 		d_sprite_move(s->movable.movable[i].sprite, s->movable.movable[i].x / 1000, s->movable.movable[i].y / 1000);
 		d_sprite_hitbox(s->movable.movable[i].sprite, &h_x, &h_y, &h_w, &h_h);
+//		d_sprite_rotate(s->movable.movable[i].sprite, s->movable.movable[i].angle>1800?s->movable.movable[i].angle:3600-s->movable.movable[i].angle);
+		d_sprite_rotate(s->movable.movable[i].sprite, s->movable.movable[i].angle);
 		d_bbox_move(s->movable.bbox, i, s->movable.movable[i].x / 1000 + h_x, s->movable.movable[i].y / 1000 + h_y);
 		d_bbox_resize(s->movable.bbox, i, h_w, h_h);
 		if (master)
