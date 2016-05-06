@@ -36,7 +36,9 @@ void ingame_init() {
 
 void ingame_loop() {
 	int i;
-
+	
+	d_render_clearcolor_set(0x88, 0xf2, 0xff);
+	
 	d_render_tint(255, 255, 255, 255);
 	
 	movableLoop();

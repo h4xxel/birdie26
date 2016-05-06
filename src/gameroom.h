@@ -13,6 +13,8 @@ struct GameRoom {
 		UI_WIDGET *start;
 		UI_WIDGET *back;
 	} button;
+	
+	DARNIT_SPRITE *sprite[4];
 };
 
 extern GameRoom gameroom;
