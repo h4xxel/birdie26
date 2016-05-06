@@ -2,16 +2,19 @@ res/playersprite.png 32 32
 
 # Stand left
 D
+H 9 0 11 32
 T 200 32
 E
 
 # Stand left
 D
+H 9 0 11 32
 T 200 41
 E
 
 # Left
 D
+H 9 0 11 32
 T 200 33
 T 200 34
 T 200 35
@@ -20,6 +23,7 @@ E
 
 # Right
 D
+H 9 0 11 32
 T 200 37
 T 200 38
 T 200 39
@@ -28,12 +32,14 @@ E
 
 # Pull left
 D
+H 4 11 23 21
 T 100 42
 T 100 43
 E
 
 # Pull right
 D
+H 4 11 23 21
 T 100 43
 T 100 44
 E
@@ -42,16 +48,19 @@ E
 
 # Stand left
 D
+H 9 0 11 32
 T 200 105
 E
 
 # Stand right
 D
+H 9 0 11 32
 T 200 73
 E
 
 # Left
 D
+H 9 0 11 32
 T 200 97
 T 200 98
 T 200 99
@@ -60,6 +69,7 @@ E
 
 # Right
 D
+H 9 0 11 32
 T 200 101
 T 200 102
 T 200 103
