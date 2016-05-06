@@ -149,6 +149,7 @@ int server_thread(void *arg) {
 					*((uint16_t *) p) = (s->movable.movable[i].hp);
 					p += 2;
 					*((uint16_t *) p) = (s->movable.movable[i].hp_max);
+					p += 2;
 				}
 				
 				for(tmp = client; tmp; tmp = tmp->next)
