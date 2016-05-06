@@ -11,7 +11,7 @@ SUBDIRS		=	$(SRCDIRS) $(PLUGINSDIR)
 
 #LIBS		=	$(addsuffix /out.a,$(SUBDIRS))
 
-.PHONY: all clean
+.PHONY: all clean release package mrproper
 .PHONY: $(SUBDIRS)
 
 all: bin $(SUBDIRS) $(TARGET)
