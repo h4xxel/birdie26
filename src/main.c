@@ -17,6 +17,7 @@
 #include "camera.h"
 #include "ingame.h"
 #include "characters.h"
+#include "gameover.h"
 
 Gfx gfx;
 GameState gamestate;
@@ -159,6 +160,7 @@ int main(int argc, char  **argv) {
 	gameroom_init();
 	lobby_init();
 	character_room_init();
+	game_over_init();
 	
 	gamestate_pane[GAME_STATE_MENU] = &menu.pane;
 	gamestate_pane[GAME_STATE_SELECT_NAME] = &select_name.pane;
@@ -166,7 +168,7 @@ int main(int argc, char  **argv) {
 	gamestate_pane[GAME_STATE_LOBBY] = &lobby.pane;
 	gamestate_pane[GAME_STATE_ENTER_IP] = &enter_ip.pane;
 	gamestate_pane[GAME_STATE_GAMEROOM] = &gameroom.pane;
-	//gamestate_pane[GAME_STATE_GAME_OVER] = &game_over.pane;
+	gamestate_pane[GAME_STATE_GAME_OVER] = &game_over.pane;
 	
 	
 	signal(SIGINT, d_quit); //lol
