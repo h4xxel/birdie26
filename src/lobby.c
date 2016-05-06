@@ -48,7 +48,11 @@ static void button_callback_enter_ip(UI_WIDGET *widget, unsigned int type, UI_EV
 void lobby_init() {
 	lobby.pane.pane = ui_pane_create(10, 10, DISPLAY_WIDTH - 20, DISPLAY_HEIGHT - 20, lobby.vbox = ui_widget_create_vbox());
 	lobby.pane.next = NULL;
-
+	
+	lobby.pane.pane->background_color.r = PANE_R;
+	lobby.pane.pane->background_color.g = PANE_G;
+	lobby.pane.pane->background_color.b = PANE_B;
+	
 	ui_vbox_add_child(lobby.vbox, lobby.label = ui_widget_create_label(gfx.font.large, "Join game"), 0);
 	ui_vbox_add_child(lobby.vbox, lobby.list = ui_widget_create_listbox(gfx.font.small), 1);
 	
@@ -65,6 +69,10 @@ void lobby_init() {
 	
 	enter_ip.pane.pane = ui_pane_create(10, 40, DISPLAY_WIDTH - 20, 200, enter_ip.vbox = ui_widget_create_vbox());
 	enter_ip.pane.next = NULL;
+	
+	enter_ip.pane.pane->background_color.r = PANE_R;
+	enter_ip.pane.pane->background_color.g = PANE_G;
+	enter_ip.pane.pane->background_color.b = PANE_B;
 	
 	ui_vbox_add_child(enter_ip.vbox, enter_ip.label = ui_widget_create_label(gfx.font.small, "Enter IP address"), 1);
 	ui_vbox_add_child(enter_ip.vbox, enter_ip.entry = ui_widget_create_entry(gfx.font.small), 0);

@@ -37,8 +37,16 @@ void menu_init() {
 	menu.pane.pane = ui_pane_create(10, 10, DISPLAY_WIDTH - 20, 220, menu.vbox = ui_widget_create_vbox());
 	menu.pane.next = &menu_help.pane;
 	
+	menu.pane.pane->background_color.r = PANE_R;
+	menu.pane.pane->background_color.g = PANE_G;
+	menu.pane.pane->background_color.b = PANE_B;
+	
 	menu_help.pane.pane = ui_pane_create(10, 210 + 30, DISPLAY_WIDTH - 20, DISPLAY_HEIGHT - 210 - 20 - 20, menu_help.vbox = ui_widget_create_vbox());
 	menu_help.pane.next = NULL;
+	
+	menu_help.pane.pane->background_color.r = PANE_R;
+	menu_help.pane.pane->background_color.g = PANE_G;
+	menu_help.pane.pane->background_color.b = PANE_B;
 	
 	ui_vbox_add_child(menu_help.vbox, menu_help.label.title = ui_widget_create_label(gfx.font.large, "How to play"), 0);
 	ui_vbox_add_child(menu_help.vbox, ui_widget_create_spacer_size(0, 10), 0);
@@ -64,7 +72,11 @@ void menu_init() {
         
 	select_name.pane.pane = ui_pane_create(DISPLAY_WIDTH/2 - 200, DISPLAY_HEIGHT/2 - 150/2, 400, 150, select_name.vbox = ui_widget_create_vbox());
 	select_name.pane.next = NULL;
-
+	
+	select_name.pane.pane->background_color.r = PANE_R;
+	select_name.pane.pane->background_color.g = PANE_G;
+	select_name.pane.pane->background_color.b = PANE_B;
+	
 	ui_vbox_add_child(select_name.vbox, select_name.label = ui_widget_create_label(gfx.font.large, "Enter a name"), 1);
 	ui_vbox_add_child(select_name.vbox, select_name.entry = ui_widget_create_entry(gfx.font.small), 0);
 	select_name.hbox = ui_widget_create_hbox();

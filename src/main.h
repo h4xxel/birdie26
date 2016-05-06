@@ -12,6 +12,10 @@
 #define NAME_LEN_MAX 64
 #define	PLAYER_CAP 4
 
+#define PANE_R 0xCD
+#define PANE_G 0xCD
+#define PANE_B 0xCD
+
 #include "movable.h"
 #include "bullet.h"
 #include "player.h"

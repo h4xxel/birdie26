@@ -81,6 +81,7 @@ void game_state(GameState state) {
 		case GAME_STATE_HOST:
 		case GAME_STATE_LOBBY:
 		case GAME_STATE_ENTER_IP:
+		case GAME_STATE_CHARACTERS:
 			break;
 		case GAME_STATE_GAMEROOM:
 			break;
@@ -123,6 +124,7 @@ void game_state(GameState state) {
 			state = GAME_STATE_GAMEROOM;
 		case GAME_STATE_GAMEROOM:
 			ui_listbox_clear(gameroom.list);
+		case GAME_STATE_CHARACTERS:
 		case GAME_STATE_GAME_OVER:
 		case GAME_STATE_QUIT:
 			d_input_release();
@@ -138,7 +140,7 @@ void game_state(GameState state) {
 int main(int argc, char  **argv) {
 	char font_path[512];
 	
-	d_init_custom("birdie26", DISPLAY_WIDTH, DISPLAY_HEIGHT, 0, "birdie26", NULL);
+	d_init_custom("Fascister i grönsakslandet ~ //achtung fulkod", DISPLAY_WIDTH, DISPLAY_HEIGHT, 0, "birdie26", NULL);
 	
 	sprintf(font_path, "%s", d_fs_exec_path());
 	chdir(dirname(font_path));
@@ -166,7 +168,7 @@ int main(int argc, char  **argv) {
 	network_init(PORT);
 	
 	d_cursor_show(1);
-	d_render_clearcolor_set(0xCD, 0xCD, 0xCD);
+	d_render_clearcolor_set(0x7F, 0x7F, 0x7F);
 	
 	if(argc > 1) {
 		snprintf(player_name, NAME_LEN_MAX, "%s", argv[1]);
@@ -180,7 +182,7 @@ int main(int argc, char  **argv) {
 		d_render_begin();
 		d_render_blend_enable();
 		
-		d_render_tint(0, 255, 0, 255);
+		d_render_tint(20, 20, 20, 255);
 		
 		if(gamestate_pane[gamestate])
 			ui_events(gamestate_pane[gamestate], 1);

@@ -21,6 +21,10 @@ void gameroom_init() {
 	gameroom.pane.pane = ui_pane_create(10, 10, DISPLAY_WIDTH - 20, DISPLAY_HEIGHT - 20, gameroom.vbox = ui_widget_create_vbox());
 	gameroom.pane.next = NULL;
 
+	gameroom.pane.pane->background_color.r = PANE_R;
+	gameroom.pane.pane->background_color.g = PANE_G;
+	gameroom.pane.pane->background_color.b = PANE_B;
+
 	ui_vbox_add_child(gameroom.vbox, gameroom.label = ui_widget_create_label(gfx.font.large, "Players in game"), 0);
 	ui_vbox_add_child(gameroom.vbox, gameroom.list = ui_widget_create_listbox(gfx.font.small), 1);
 	

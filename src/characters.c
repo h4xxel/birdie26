@@ -16,9 +16,9 @@ void character_room_init() {
 	character_room.pane.pane = ui_pane_create(10, 10, DISPLAY_WIDTH - 20, DISPLAY_HEIGHT - 20, character_room.vbox = ui_widget_create_vbox());
 	character_room.pane.next = NULL;
 
-	character_room.pane.pane->background_color.r = 0x7f;
-	character_room.pane.pane->background_color.g = 0x7f;
-	character_room.pane.pane->background_color.b = 0x7f;
+	character_room.pane.pane->background_color.r = PANE_R;
+	character_room.pane.pane->background_color.g = PANE_G;
+	character_room.pane.pane->background_color.b = PANE_B;
 
 	ui_vbox_add_child(character_room.vbox, character_room.label = ui_widget_create_label(gfx.font.large, "Character Showcase"), 0);
 	
