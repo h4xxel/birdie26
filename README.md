@@ -17,6 +17,7 @@ Eating your favourite vegetable restores your health.
  * Pick up/throw with [s]
 
 ## Running under Linux
+ * Install the following dependencies: libbz2, SDL, libmodplug
  * Make the binary executable (chmod +x gronsak)
  * Run it (./gronsak)
 
