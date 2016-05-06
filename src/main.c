@@ -145,8 +145,13 @@ void game_state(GameState state) {
 int main(int argc, char  **argv) {
 	char font_path[512];
 	char *tmp;
+	bool fullscreen = false;
 	
-	d_init_custom("Fascister i grönsakslandet ~ //achtung fulkod", DISPLAY_WIDTH, DISPLAY_HEIGHT, 0, "birdie26", NULL);
+	if (argc >= 2 && !strcmp(argv[1], "-fs"))
+		fullscreen = true;
+		
+
+	d_init_custom("Fascister i grönsakslandet ~ //achtung fulkod", DISPLAY_WIDTH, DISPLAY_HEIGHT, fullscreen, "birdie26", NULL);
 	
 	sprintf(font_path, "%s", d_fs_exec_path());
 	chdir(tmp = dirname(font_path));
