@@ -51,7 +51,13 @@ void menu_init() {
 	ui_vbox_add_child(menu_help.vbox, menu_help.label.title = ui_widget_create_label(gfx.font.large, "How to play"), 0);
 	ui_vbox_add_child(menu_help.vbox, ui_widget_create_spacer_size(0, 10), 0);
 	ui_vbox_add_child(menu_help.vbox, menu_help.label.title = ui_widget_create_label(gfx.font.small, 
-		"don't. it is buggy as hell."
+		"Four Great Dictators™ meet in Stalin's back yard. They all have a simple "
+		"mission; to prove that their favourite root vegetable is superior to them all. "
+		"Kill all other players by picking up and throwing vegetables at them. "
+		"Eating your favourite vegetable restores your health.\n"
+		" * Move using the arrow keys\n"
+		" * Jump with [a]\n"
+		" * Pick up/throw with [s]\n"
 	), 0);
 	ui_vbox_add_child(menu_help.vbox, ui_widget_create_spacer(), 1);
 	ui_vbox_add_child(menu_help.vbox, menu_help.label.title = ui_widget_create_label(gfx.font.small, "2016 party hack for Birdie Gamedev compo\nh4xxel (http://h4xxel.org) & slaesjag (http://rdw.se) of //actung fulkod"), 0);
@@ -61,7 +67,7 @@ void menu_init() {
 	//ui_vbox_add_child(menu.vbox, ui_widget_create_entry(font), 0);
 	ui_vbox_add_child(menu.vbox, menu.button.host = ui_widget_create_button_text(gfx.font.small, "Host game"), 0);
 	ui_vbox_add_child(menu.vbox, menu.button.join = ui_widget_create_button_text(gfx.font.small, "Join game"), 0);
-	ui_vbox_add_child(menu.vbox, menu.button.character = ui_widget_create_button_text(gfx.font.small, "Character Showcase"), 0);
+	ui_vbox_add_child(menu.vbox, menu.button.character = ui_widget_create_button_text(gfx.font.small, "The Dictators"), 0);
 	ui_vbox_add_child(menu.vbox, menu.button.quit = ui_widget_create_button_text(gfx.font.small, "Quit game"), 0);
 
 	menu.button.host->event_handler->add(menu.button.host, button_callback_menu, UI_EVENT_TYPE_UI_WIDGET_ACTIVATE);
