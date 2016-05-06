@@ -193,3 +193,16 @@ bool server_player_is_present(int id) {
 			return true;
 	return false;
 }
+
+void server_shutdown() {
+	ClientList *tmp;
+	
+	network_close_udp();
+	
+	for(tmp = client; tmp; tmp = tmp->next)
+		network_close_tcp(tmp->sock);
+	
+	network_close_tcp(listen_sock);
+	
+}
+
