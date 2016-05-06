@@ -41,7 +41,7 @@ static int _player_direction(MOVABLE_ENTRY *self) {
 	if (player_id < 0 || player_id >= PLAYER_CAP)
 		return 0;
 	
-	return !s->player[player_id].last_walk_direction | ((self->x_velocity != 0) << 1);
+	return (!s->player[player_id].last_walk_direction) | ((self->x_velocity != 0) << 1);
 }
 
 

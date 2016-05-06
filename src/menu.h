@@ -14,6 +14,7 @@ struct Menu {
 	struct {
 		UI_WIDGET *host;
 		UI_WIDGET *join;
+		UI_WIDGET *character;
 		UI_WIDGET *quit;
 	} button;
 };

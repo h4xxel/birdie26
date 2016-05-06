@@ -16,6 +16,7 @@
 #include "main.h"
 #include "camera.h"
 #include "ingame.h"
+#include "characters.h"
 
 Gfx gfx;
 GameState gamestate;
@@ -148,9 +149,11 @@ int main(int argc, char  **argv) {
 	menu_init();
 	gameroom_init();
 	lobby_init();
+	character_room_init();
 	
 	gamestate_pane[GAME_STATE_MENU] = &menu.pane;
 	gamestate_pane[GAME_STATE_SELECT_NAME] = &select_name.pane;
+	gamestate_pane[GAME_STATE_CHARACTERS] = &character_room.pane;
 	gamestate_pane[GAME_STATE_LOBBY] = &lobby.pane;
 	gamestate_pane[GAME_STATE_ENTER_IP] = &enter_ip.pane;
 	gamestate_pane[GAME_STATE_GAMEROOM] = &gameroom.pane;
@@ -161,6 +164,7 @@ int main(int argc, char  **argv) {
 	network_init(PORT);
 	
 	d_cursor_show(1);
+	d_render_clearcolor_set(0xCD, 0xCD, 0xCD);
 	
 	if(argc > 1) {
 		snprintf(player_name, NAME_LEN_MAX, "%s", argv[1]);
@@ -177,6 +181,7 @@ int main(int argc, char  **argv) {
 			state_render[gamestate]();
 		
 		d_render_tint(0, 255, 0, 255);
+		
 		if(gamestate_pane[gamestate])
 			ui_events(gamestate_pane[gamestate], 1);
 
