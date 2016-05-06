@@ -52,7 +52,15 @@ unsigned long network_local_ip() {
 
 unsigned long network_ip(const char *host) {
 	struct hostent *hent;
-	hent = gethostbyname(host);
+	char *tmp = strdup(host);
+	int i;
+
+	for (i = 0; tmp[i]; i++)
+		if (tmp[i] == ',')
+			tmp[i] = '.';
+	
+	hent = gethostbyname(tmp);
+	free(tmp);
 	if(!hent)
 		return 0;
 	return (*((struct in_addr **) (hent->h_addr_list)))->s_addr;
@@ -208,6 +216,10 @@ int network_accept_tcp(int listensock) {
 
 	if((sock = accept(listensock, (void *) &addr, (void *) &addr_len)) == INVALID_SOCKET)
 		return -1;
+	#ifdef _WIN32
+	int flag = 1;
+	setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, (char *) &flag, sizeof(int));
+	#endif
 
 /*	#ifndef _WIN32
 	int flags;
@@ -247,6 +259,11 @@ int network_connect_tcp(unsigned long to, int port) {
 		closesocket(sock);
 		return -1;
 	}
+	
+	#ifdef _WIN32
+	int flag = 1;
+	setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, (char *) &flag, sizeof(int));
+	#endif
 	
 	return sock;
 }
