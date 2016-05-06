@@ -29,12 +29,14 @@ void character_room_init() {
 	tmp = ui_widget_create_vbox();
 	
 	ui_vbox_add_child(tmp, ui_widget_create_label(gfx.font.large, "Rump"), 0);
+	ui_vbox_add_child(tmp, ui_widget_create_label(gfx.font.small, "Favourite vegetable: Carrot"), 0);
 	ui_vbox_add_child(tmp, ui_widget_create_label(gfx.font.small, "\"Make America hate again!\""), 0);
 	
 	ui_hbox_add_child(character_room.hbox1, tmp, 1);
 	tmp = ui_widget_create_vbox();
 	
 	ui_vbox_add_child(tmp, ui_widget_create_label(gfx.font.large, "Dim Young 'Un"), 0);
+	ui_vbox_add_child(tmp, ui_widget_create_label(gfx.font.small, "Favourite vegetable: Potato"), 0);
 	ui_vbox_add_child(tmp, ui_widget_create_label(gfx.font.small, "\"Everyone be like: Dear Leader, your onion breath is so fresh!\""), 0);
 	
 	ui_hbox_add_child(character_room.hbox1, tmp, 1);
@@ -44,12 +46,14 @@ void character_room_init() {
 	tmp = ui_widget_create_vbox();
 	
 	ui_vbox_add_child(tmp, ui_widget_create_label(gfx.font.large, "Shitler"), 0);
+	ui_vbox_add_child(tmp, ui_widget_create_label(gfx.font.small, "Favourite vegetable: Onion"), 0);
 	ui_vbox_add_child(tmp, ui_widget_create_label(gfx.font.small, "\"NEIN NEIN NEIN NEIN\""), 0);
 	
 	ui_hbox_add_child(character_room.hbox2, tmp, 1);
 	tmp = ui_widget_create_vbox();
 	
 	ui_vbox_add_child(tmp, ui_widget_create_label(gfx.font.large, "Ståhlin"), 0);
+	ui_vbox_add_child(tmp, ui_widget_create_label(gfx.font.small, "Favourite vegetable: Rutabaga"), 0);
 	ui_vbox_add_child(tmp, ui_widget_create_label(gfx.font.small, "\"My gulag brings all the boys to the yard\""), 0);
 	
 	ui_hbox_add_child(character_room.hbox2, tmp, 1);
@@ -67,8 +71,8 @@ void character_room_init() {
 	character_room.sprite[1] = d_sprite_load("res/player2.spr", 3, DARNIT_PFORMAT_RGBA8);
 	character_room.sprite[2] = d_sprite_load("res/player3.spr", 2, DARNIT_PFORMAT_RGBA8);
 	character_room.sprite[3] = d_sprite_load("res/player4.spr", 3, DARNIT_PFORMAT_RGBA8);
-	d_sprite_move(character_room.sprite[0], 160, 160);
-	d_sprite_move(character_room.sprite[1], DISPLAY_WIDTH - 180, 160);
+	d_sprite_move(character_room.sprite[0], 160, 180);
+	d_sprite_move(character_room.sprite[1], DISPLAY_WIDTH - 180, 180);
 	d_sprite_move(character_room.sprite[2], 160, 360);
 	d_sprite_move(character_room.sprite[3], DISPLAY_WIDTH - 180, 360);
 	
