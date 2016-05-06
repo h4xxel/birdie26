@@ -37,3 +37,31 @@ D
 T 100 60
 T 100 61
 E
+
+# Carrying
+
+# Stand left
+D
+T 200 112
+E
+
+# Stand right
+D
+T 200 121
+E
+
+# Left
+D
+T 200 113
+T 200 114
+T 200 115
+T 200 116
+E
+
+# Right
+D
+T 200 117
+T 200 118
+T 200 119
+T 200 120
+E
