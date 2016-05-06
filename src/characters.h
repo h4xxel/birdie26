@@ -15,10 +15,13 @@ struct CharacterRoom {
 		UI_WIDGET *start;
 		UI_WIDGET *back;
 	} button;
+	
+	DARNIT_SPRITE *sprite[4];
 };
 
 extern CharacterRoom character_room;
 void character_room_network_handler();
 void character_room_init();
+void character_room_render();
 
 #endif

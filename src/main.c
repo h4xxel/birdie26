@@ -27,6 +27,7 @@ int server_sock;
 void (*state_render[GAME_STATES])()={
 	[GAME_STATE_MENU] = menu_render,
 	[GAME_STATE_GAME] = ingame_loop,
+	[GAME_STATE_CHARACTERS] = character_room_render,
 	[GAME_STATE_SELECT_NAME] = NULL,
 //	[GAME_STATE_GAME_OVER] = game_over_render,
 };
@@ -140,6 +141,7 @@ int main(int argc, char  **argv) {
 	d_init_custom("birdie26", DISPLAY_WIDTH, DISPLAY_HEIGHT, 0, "birdie26", NULL);
 	
 	sprintf(font_path, "%s", d_fs_exec_path());
+	chdir(dirname(font_path));
 	sprintf(font_path, "%s/res/font.ttf", dirname(font_path));
 	gfx.font.large = d_font_load(font_path, 40, 256, 256);
 	gfx.font.small = d_font_load(font_path, 16, 256, 256);
@@ -177,14 +179,16 @@ int main(int argc, char  **argv) {
 		
 		d_render_begin();
 		d_render_blend_enable();
-		if(state_render[gamestate])
-			state_render[gamestate]();
 		
 		d_render_tint(0, 255, 0, 255);
 		
 		if(gamestate_pane[gamestate])
 			ui_events(gamestate_pane[gamestate], 1);
-
+	
+		d_render_tint(255, 255, 255, 255);
+		if(state_render[gamestate])
+			state_render[gamestate]();
+	
 		d_render_end();
 		d_loop();
 	}
