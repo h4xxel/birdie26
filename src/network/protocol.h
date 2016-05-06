@@ -12,6 +12,7 @@ enum PacketType {
 	PACKET_TYPE_JOIN,
 	PACKET_TYPE_START,
 	PACKET_TYPE_MOVE_OBJECT,
+	PACKET_TYPE_SOUND,
 	PACKET_TYPE_KEYPRESS,
 	PACKET_TYPE_EXIT,
 };
@@ -75,6 +76,15 @@ struct PacketParticleBurst {
 	
 };
 
+
+typedef struct PacketSound PacketSound;
+struct PacketSound {
+	uint16_t type;
+	uint16_t size;
+
+	uint8_t sound;
+};
+
 typedef struct PacketExit PacketExit;
 struct PacketExit {
 	uint16_t type;
@@ -95,6 +105,7 @@ union Packet {
 	PacketLobby lobby;
 	PacketJoin join;
 	PacketStart start;
+	PacketSound sound;
 	PacketKeypress keypress;
 	PacketExit exit;
 };

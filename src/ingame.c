@@ -10,6 +10,7 @@
 #include "server/server.h"
 #include "gameover.h"
 #include "main.h"
+#include "soundeffects.h"
 
 struct InGameKeyStateEntry ingame_keystate[PLAYER_CAP];
 
@@ -25,6 +26,7 @@ void ingame_init() {
 	bulletInit();
 	movableLoad();
 	healthbar_init();
+	soundeffects_init();
 
 	for (i = 0; i < s->movable.movables; i++) {
 		if (!(playerid_str = d_map_prop(s->active_level->object[i].ref, "player_id")))
@@ -152,7 +154,9 @@ void ingame_network_handler() {
 			}
 			
 			break;
-		
+		case PACKET_TYPE_SOUND:
+			soundeffects_play(pack.sound.sound);
+			break;
 		case PACKET_TYPE_EXIT:
 			game_over_set_player(pack.exit.player, pack.exit.name);
 			game_state(GAME_STATE_GAME_OVER);
