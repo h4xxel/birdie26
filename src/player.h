@@ -5,6 +5,7 @@
 
 struct PlayerState {
 	int last_walk_direction;
+	int pulling;
 	MOVABLE_ENTRY *holding;
 };
 

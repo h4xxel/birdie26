@@ -9,6 +9,10 @@
 
 
 #define	ROOT_SPAWN_TIME ((rand() % 20) * 500 + 3000 + d_time_get())
+#define	ROOT_PULL_TIME 1000
+#define	ROOT_REGEN 50
+#define	ROOT_FAVOURITE_DMG 100
+#define	ROOT_GENERIC_DMG 30
 
 enum RootType {
 	ROOT_TYPE_POTATO,
@@ -40,6 +44,8 @@ static int _player_direction(MOVABLE_ENTRY *self) {
 	player_id = _get_player_id(self);
 	if (player_id < 0 || player_id >= PLAYER_CAP)
 		return 0;
+	if (s->player[player_id].pulling > d_time_get())
+		return (!s->player[player_id].last_walk_direction) + 4;
 	
 	return (!s->player[player_id].last_walk_direction) | ((self->x_velocity != 0) << 1);
 }
@@ -80,7 +86,6 @@ void ai_player(void *dummy, void *entry, MOVABLE_MSG msg) {
 	switch (msg) {
 		case MOVABLE_MSG_INIT:
 			self->hp = self->hp_max = 400;
-			self->hp = 300;
 			self->gravity_effect = 1;
 			s->player[player_id].last_walk_direction = 0;
 			if (player_id >= PLAYER_CAP)	// TODO: replace PLAYER_CAP with actual number of connected players //
@@ -92,6 +97,17 @@ void ai_player(void *dummy, void *entry, MOVABLE_MSG msg) {
 		case MOVABLE_MSG_LOOP:
 //			if (_player_fix_hitbox(self))
 //				break;
+			if (s->player[player_id].pulling > d_time_get())
+				goto noinput;
+			if (s->player[player_id].holding && (_root_type(s->player[player_id].holding) == player_id)) {
+				_root_splat(s->player[player_id].holding);
+				s->player[player_id].holding = NULL;
+				/* TODO: Play sound of eating favourite vegetable */
+				self->hp += ROOT_REGEN;
+				if (self->hp > self->hp_max)
+					self->hp = self->hp_max;
+			}
+
 			if (ingame_keystate[player_id].left) {
 				self->x_velocity = -400;
 				s->player[player_id].last_walk_direction = 0;
@@ -113,7 +129,6 @@ void ai_player(void *dummy, void *entry, MOVABLE_MSG msg) {
 				int nearby[6], x, y, w, h, i, found;
 
 				ingame_keystate[player_id].grab = 0;
-				fprintf(stderr, "Trying to pick root\n");
 				d_sprite_hitbox(self->sprite, &x, &y, &w, &h);
 				x += self->x / 1000;
 				y += self->y / 1000;
@@ -123,7 +138,7 @@ void ai_player(void *dummy, void *entry, MOVABLE_MSG msg) {
 						continue;
 					if (s->movable.movable[nearby[i]].ai == ai_root) {	// If it looks like a potato, and thinks like a potato, it probably is a potato
 						if (_root_grab(&s->movable.movable[nearby[i]], self)) {
-							fprintf(stderr, "Grabbed root\n");
+							s->player[player_id].pulling = d_time_get() + ROOT_PULL_TIME;
 							s->player[player_id].holding = &s->movable.movable[nearby[i]];
 						} else
 							continue;
@@ -149,6 +164,25 @@ void ai_player(void *dummy, void *entry, MOVABLE_MSG msg) {
 					if (!_root_is_hostile(&s->movable.movable[nearby[i]], self))
 						continue;
 					type = _root_type(&s->movable.movable[nearby[i]]);
+					if (type == player_id) {
+						self->hp -= ROOT_FAVOURITE_DMG;
+						if (self->hp < 0)
+							self->hp = 0;
+						if (!self->hp) {
+							/* TODO: Play sound of dying */
+						} else {
+							/* TODO: Play sound of getting hit by favourite root */
+						}
+					} else {
+						self->hp -= ROOT_GENERIC_DMG;
+						if (self->hp < 0)
+							self->hp = 0;
+						if (!self->hp) {
+							/* TODO: Play sound of dying */
+						} else {
+							/* TODO: Play generic getting-hit sound */
+						}
+					}
 
 					/* Handle specific per-root effects here */
 					if (type == ROOT_TYPE_POTATO) {
@@ -164,6 +198,8 @@ void ai_player(void *dummy, void *entry, MOVABLE_MSG msg) {
 				}
 
 			}
+
+			noinput:
 
 			self->direction = _player_direction(self);
 			break;
@@ -204,7 +240,6 @@ static bool _root_grab(MOVABLE_ENTRY *self, MOVABLE_ENTRY *player) {
 	rst->picker = player;
 	rst->state = ROOT_STATE_HELD;
 	rst->type = rand() % ROOT_TYPE_TYPES;
-	self->direction = 3 + rst->type;
 	return true;
 }
 
@@ -278,15 +313,18 @@ void ai_root(void *dummy, void *entry, MOVABLE_MSG msg) {
 					}
 					break;
 				case ROOT_STATE_HELD: {
-					int x, y, w, h, x2, y2, w2, h2;
-					d_sprite_hitbox(rst->picker->sprite, &x, &y, &w, &h);
-					d_sprite_hitbox(self->sprite, &x2, &y2, &w2, &h2);
-					y -= (h2 + y2);
-					x = (x + w/2) - (w2/2);
-					x *= 1000, y *= 1000;
-					x += rst->picker->x;
-					y += rst->picker->y;
-					self->x = x, self->y = y;
+					int x, y, w, h, x2, y2, w2, h2, picker;
+					if (s->player[(picker = _get_player_id(rst->picker))].pulling <= d_time_get()) {
+						self->direction = 3 + rst->type;
+						d_sprite_hitbox(rst->picker->sprite, &x, &y, &w, &h);
+						d_sprite_hitbox(self->sprite, &x2, &y2, &w2, &h2);
+						y -= (h2 + y2);
+						x = (x + w/2) - (w2/2);
+						x *= 1000, y *= 1000;
+						x += rst->picker->x;
+						y += rst->picker->y;
+						self->x = x, self->y = y;
+					}
 					break;
 				} 
 				case ROOT_STATE_THROWN:
