@@ -84,8 +84,8 @@ void ai_player(void *dummy, void *entry, MOVABLE_MSG msg) {
 			s->player[player_id].holding = NULL;
 			break;
 		case MOVABLE_MSG_LOOP:
-			if (_player_fix_hitbox(self))
-				break;
+//			if (_player_fix_hitbox(self))
+//				break;
 			if (ingame_keystate[player_id].left) {
 				self->x_velocity = -400;
 				s->player[player_id].last_walk_direction = 0;
