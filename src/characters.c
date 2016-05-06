@@ -20,7 +20,7 @@ void character_room_init() {
 	character_room.pane.pane->background_color.g = PANE_G;
 	character_room.pane.pane->background_color.b = PANE_B;
 
-	ui_vbox_add_child(character_room.vbox, character_room.label = ui_widget_create_label(gfx.font.large, "Character Showcase"), 0);
+	ui_vbox_add_child(character_room.vbox, character_room.label = ui_widget_create_label(gfx.font.large, "The Dictators"), 0);
 	
 	UI_WIDGET *tmp;
 	
@@ -64,19 +64,22 @@ void character_room_init() {
 	character_room.button.back->event_handler->add(character_room.button.back, button_callback, UI_EVENT_TYPE_UI_WIDGET_ACTIVATE);
 	
 	character_room.sprite[0] = d_sprite_load("res/player.spr", 2, DARNIT_PFORMAT_RGBA8);
-	character_room.sprite[1] = d_sprite_load("res/player2.spr", 2, DARNIT_PFORMAT_RGBA8);
+	character_room.sprite[1] = d_sprite_load("res/player2.spr", 3, DARNIT_PFORMAT_RGBA8);
 	character_room.sprite[2] = d_sprite_load("res/player3.spr", 2, DARNIT_PFORMAT_RGBA8);
-	character_room.sprite[3] = d_sprite_load("res/player4.spr", 2, DARNIT_PFORMAT_RGBA8);
+	character_room.sprite[3] = d_sprite_load("res/player4.spr", 3, DARNIT_PFORMAT_RGBA8);
 	d_sprite_move(character_room.sprite[0], 160, 160);
 	d_sprite_move(character_room.sprite[1], DISPLAY_WIDTH - 180, 160);
 	d_sprite_move(character_room.sprite[2], 160, 360);
 	d_sprite_move(character_room.sprite[3], DISPLAY_WIDTH - 180, 360);
 	
+	d_sprite_activate(character_room.sprite[0], 2);
+	d_sprite_activate(character_room.sprite[1], 3);
+	d_sprite_activate(character_room.sprite[2], 2);
+	d_sprite_activate(character_room.sprite[3], 3);
+	
 	int i;
 	for(i = 0; i < 4; i++) {
-		d_sprite_activate(character_room.sprite[i], 2);
 		d_sprite_animate_start(character_room.sprite[i]);
-		
 	}
 }
 
