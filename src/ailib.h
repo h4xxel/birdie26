@@ -9,5 +9,6 @@ struct AILibEntry {
 };
 
 void *ailib_get(const char *str);
+int _get_player_id(MOVABLE_ENTRY *self);
 
 #endif

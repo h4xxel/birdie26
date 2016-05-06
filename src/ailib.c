@@ -25,7 +25,7 @@ static bool _root_is_hostile(MOVABLE_ENTRY *self, MOVABLE_ENTRY *player);
 static enum RootType _root_type(MOVABLE_ENTRY *self);
 static void _root_splat(MOVABLE_ENTRY *self);
 
-static int _get_player_id(MOVABLE_ENTRY *self) {
+int _get_player_id(MOVABLE_ENTRY *self) {
 	/* On a scale of 1 to italy, how inefficient is this? */
 	const char *playerid_str;
 	if (!(playerid_str = d_map_prop(s->active_level->object[self->id].ref, "player_id")))
@@ -80,9 +80,12 @@ void ai_player(void *dummy, void *entry, MOVABLE_MSG msg) {
 	switch (msg) {
 		case MOVABLE_MSG_INIT:
 			self->hp = self->hp_max = 400;
+			self->hp = 300;
 			self->gravity_effect = 1;
 			s->player[player_id].last_walk_direction = 0;
 			if (player_id >= PLAYER_CAP)	// TODO: replace PLAYER_CAP with actual number of connected players //
+				self->hp = 0;
+			if (!server_player_is_present(player_id))
 				self->hp = 0;
 			s->player[player_id].holding = NULL;
 			break;
@@ -163,6 +166,9 @@ void ai_player(void *dummy, void *entry, MOVABLE_MSG msg) {
 			}
 
 			self->direction = _player_direction(self);
+			break;
+		case MOVABLE_MSG_DESTROY:
+			/* TODO: Handle destroy, announce the dead. Etc. */
 			break;
 		default:
 			break;

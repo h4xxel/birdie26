@@ -22,6 +22,7 @@ void ingame_init() {
 	movableInit();
 	bulletInit();
 	movableLoad();
+	healthbar_init();
 
 	for (i = 0; i < s->movable.movables; i++) {
 		if (!(playerid_str = d_map_prop(s->active_level->object[i].ref, "player_id")))
@@ -56,6 +57,8 @@ void ingame_loop() {
 		d_render_offset(s->camera.x, s->camera.y);
 		movableLoopRender(i);
 	}
+
+	healthbar_draw();
 	ingame_client_keyboard();
 }
 
@@ -136,6 +139,11 @@ void ingame_network_handler() {
 				p+= 1;
 				s->movable.movable[i].angle = *((uint8_t *) p);
 				s->movable.movable[i].angle *= (2 * 10);
+				p += 1;
+				s->movable.movable[i].hp = *((uint16_t *) p);
+				p += 2;
+				s->movable.movable[i].hp_max = *((uint16_t *) p);
+				p += 2;
 			}
 			
 			break;

@@ -134,7 +134,7 @@ int server_thread(void *arg) {
 				d_util_semaphore_wait(sem);
 				
 				move.type = PACKET_TYPE_MOVE_OBJECT;
-				move.size = 4 + s->movable.movables*6;
+				move.size = 4 + s->movable.movables*10;
 				p = move.raw;
 				
 				for(i = 0; i < s->movable.movables; i++) {
@@ -146,6 +146,9 @@ int server_thread(void *arg) {
 					p+= 1;
 					*((uint8_t *) p) = (s->movable.movable[i].angle / 10 / 2);
 					p += 1;
+					*((uint16_t *) p) = (s->movable.movable[i].hp);
+					p += 2;
+					*((uint16_t *) p) = (s->movable.movable[i].hp_max);
 				}
 				
 				for(tmp = client; tmp; tmp = tmp->next)
@@ -179,4 +182,13 @@ void server_start_game() {
 
 void server_kick() {
 	d_util_semaphore_add(sem, 1);
+}
+
+bool server_player_is_present(int id) {
+	struct ClientList *next;
+
+	for (next = client; next; next = next->next)
+		if (next->id == id)
+			return true;
+	return false;
 }
