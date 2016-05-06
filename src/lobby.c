@@ -74,7 +74,7 @@ void lobby_init() {
 	enter_ip.pane.pane->background_color.g = PANE_G;
 	enter_ip.pane.pane->background_color.b = PANE_B;
 	
-	ui_vbox_add_child(enter_ip.vbox, enter_ip.label = ui_widget_create_label(gfx.font.small, "Enter IP address"), 1);
+	ui_vbox_add_child(enter_ip.vbox, enter_ip.label = ui_widget_create_label(gfx.font.small, "Enter IP address\nThe numpad comma (,) can be used instead of a dot (.)"), 1);
 	ui_vbox_add_child(enter_ip.vbox, enter_ip.entry = ui_widget_create_entry(gfx.font.small), 0);
 	
 	enter_ip.hbox = ui_widget_create_hbox();
