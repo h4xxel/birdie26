@@ -15,6 +15,7 @@
 #include "movable.h"
 #include "bullet.h"
 #include "player.h"
+#include "healthbar.h"
 
 typedef enum GameState GameState;
 enum GameState {
@@ -49,6 +50,7 @@ struct GameStateStruct {
 	MOVABLE			movable;
 	DARNIT_MAP		*active_level;
 	BULLET			bullet;
+	struct HealthbarStruct	healthbar;
 	struct PlayerState	player[PLAYER_CAP];
 	struct {
 				int x;

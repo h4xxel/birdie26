@@ -317,6 +317,8 @@ void movableLoopRender(int layer) {
 	for (i = 0; i < res; i++) {
 		if (s->movable.movable[s->movable.coll_buf[i]].l != layer)
 			continue;
+		if (!s->movable.movable[s->movable.coll_buf[i]].hp)
+			continue;
 		d_sprite_draw(s->movable.movable[s->movable.coll_buf[i]].sprite);
 	}
 }
