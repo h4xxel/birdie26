@@ -176,6 +176,18 @@ void server_start() {
 	d_util_thread_new(server_thread, NULL);
 }
 
+void server_sound(enum SoundeffectSound sound) {
+	PacketSound pack;
+	ClientList *tmp;
+
+	pack.type = PACKET_TYPE_SOUND;
+	pack.size = sizeof(pack);
+	pack.sound = sound;
+	for (tmp = client; tmp; tmp = tmp->next)
+		protocol_send_packet(tmp->sock, &pack);
+	return;
+}
+
 void server_announce_winner(int winning_player) {
 	PacketExit pack;
 	ClientList *tmp;

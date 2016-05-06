@@ -3,6 +3,8 @@
 #include "ingame.h"
 #include "main.h"
 #include "trigonometry.h"
+#include "soundeffects.h"
+#include "server/server.h"
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
@@ -103,7 +105,9 @@ void ai_player(void *dummy, void *entry, MOVABLE_MSG msg) {
 			if (s->player[player_id].holding && (_root_type(s->player[player_id].holding) == player_id)) {
 				_root_splat(s->player[player_id].holding);
 				s->player[player_id].holding = NULL;
-				/* TODO: Play sound of eating favourite vegetable */
+
+				server_sound(SOUND_CRUNCH);
+
 				self->hp += ROOT_REGEN;
 				if (self->hp > self->hp_max)
 					self->hp = self->hp_max;
@@ -140,6 +144,7 @@ void ai_player(void *dummy, void *entry, MOVABLE_MSG msg) {
 					if (s->movable.movable[nearby[i]].ai == ai_root) {	// If it looks like a potato, and thinks like a potato, it probably is a potato
 						if (_root_grab(&s->movable.movable[nearby[i]], self)) {
 							s->player[player_id].pulling = d_time_get() + ROOT_PULL_TIME;
+							server_sound(SOUND_UPROOT);
 							s->player[player_id].holding = &s->movable.movable[nearby[i]];
 						} else
 							continue;
@@ -170,18 +175,20 @@ void ai_player(void *dummy, void *entry, MOVABLE_MSG msg) {
 						if (self->hp < 0)
 							self->hp = 0;
 						if (!self->hp) {
-							/* TODO: Play sound of dying */
+							server_sound(SOUND_HIT);
+							server_sound(SOUND_HIT);
 						} else {
-							/* TODO: Play sound of getting hit by favourite root */
+							server_sound(SOUND_HIT);
 						}
 					} else {
 						self->hp -= ROOT_GENERIC_DMG;
 						if (self->hp < 0)
 							self->hp = 0;
 						if (!self->hp) {
-							/* TODO: Play sound of dying */
+							server_sound(SOUND_HIT);
+							server_sound(SOUND_HIT);
 						} else {
-							/* TODO: Play generic getting-hit sound */
+							server_sound(SOUND_HIT);
 						}
 					}
 

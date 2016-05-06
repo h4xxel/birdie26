@@ -20,6 +20,7 @@
 #include "bullet.h"
 #include "player.h"
 #include "healthbar.h"
+#include "soundeffects.h"
 
 typedef enum GameState GameState;
 enum GameState {
@@ -57,6 +58,7 @@ struct GameStateStruct {
 	BULLET			bullet;
 	struct HealthbarStruct	healthbar;
 	struct PlayerState	player[PLAYER_CAP];
+	struct SoundeffectStruct sfx;
 	struct {
 				int x;
 				int y;
