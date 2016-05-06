@@ -49,7 +49,7 @@ static int _player_direction(MOVABLE_ENTRY *self) {
 	if (s->player[player_id].pulling > d_time_get())
 		return (!s->player[player_id].last_walk_direction) + 4;
 	
-	return (!s->player[player_id].last_walk_direction) | ((self->x_velocity != 0) << 1);
+	return ((!s->player[player_id].last_walk_direction) | ((self->x_velocity != 0) << 1)) + (s->player[player_id].holding ? 6 : 0);
 }
 
 
