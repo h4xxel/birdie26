@@ -93,6 +93,7 @@ void ai_player(void *dummy, void *entry, MOVABLE_MSG msg) {
 			if (!server_player_is_present(player_id))
 				self->hp = 0;
 			s->player[player_id].holding = NULL;
+			s->player[player_id].pulling = 0;
 			break;
 		case MOVABLE_MSG_LOOP:
 //			if (_player_fix_hitbox(self))
