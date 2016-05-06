@@ -15,5 +15,6 @@ struct GameOver {
 
 extern GameOver game_over;
 void game_over_init();
+void game_over_set_player(int player_id, const char *name);
 
 #endif
