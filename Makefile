@@ -27,7 +27,9 @@ all: bin $(SUBDIRS) $(TARGET)
 release:
 	@+make all
 	@$(MKDIR) release/$(BINFILE)
-	@$(CP) -R bin/$(BINFILE)$(BINEXT) release/$(BINFILE)/
+	@$(CP) bin/$(BINFILE)$(BINEXT) release/$(BINFILE)/
+	@$(CP) README.md release/$(BINFILE)/
+	@$(CP) LICENSE release/$(BINFILE)/
 	@$(CP) -R bin/res release/$(BINFILE)/
 	@$(TARGET)strip release/$(BINFILE)/$(BINFILE)$(BINEXT)
 	
