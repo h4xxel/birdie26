@@ -39,6 +39,6 @@ void game_over_set_player(int player_id, const char *name) {
 	UI_PROPERTY_VALUE v;
 	
 	v.p = malloc(512);
-	sprintf(v.p, "%s (%s) has won!", name, character_names[player_id]);
+	sprintf(v.p, "%s (%s) has won!", name, player_id < 0 ? " - " : character_names[player_id]);
 	game_over.whowon->set_prop(game_over.whowon, UI_LABEL_PROP_TEXT, v);
 }
