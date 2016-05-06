@@ -21,5 +21,6 @@ int network_connect_tcp(unsigned long to, int port);
 int network_poll_tcp(int sock);
 int network_send_tcp(int sock, char *buf, int buflen);
 int network_recv_tcp(int sock, char *buf, int buflen);
+void network_close_tcp(int sock);
 
 #endif

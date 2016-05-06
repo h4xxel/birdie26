@@ -43,6 +43,10 @@ struct UI_PANE_LIST *gamestate_pane[GAME_STATES];
 void restart_to_menu(const char *name) {
 	// This is ugly :D
 	char buf[4096];
+	
+	server_shutdown();
+	network_close_tcp(server_sock);
+	
 	sprintf(buf, "%s", d_fs_exec_path());
 	sprintf(buf, "%s", basename(buf));
 	if(name)

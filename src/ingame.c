@@ -75,6 +75,9 @@ void ingame_client_keyboard() {
 	newstate.jump = d_keys_get().up;
 	newstate.grab = d_keys_get().down;
 	
+	if(d_keys_get().select)
+		restart_to_menu(player_name);
+	
 	
 	if (newstate.left ^ oldstate.left) {
 		if (newstate.left)

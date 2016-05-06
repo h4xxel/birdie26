@@ -269,3 +269,8 @@ int network_send_tcp(int sock, char *buf, int buflen) {
 int network_recv_tcp(int sock, char *buf, int buflen) {
 	return recv(sock, buf, buflen, 0);
 }
+
+void network_close_tcp(int sock) {
+	closesocket(sock);
+}
+
