@@ -80,6 +80,7 @@ void ai_player(void *dummy, void *entry, MOVABLE_MSG msg) {
 	switch (msg) {
 		case MOVABLE_MSG_INIT:
 			self->hp = self->hp_max = 400;
+			self->hp = 300;
 			self->gravity_effect = 1;
 			s->player[player_id].last_walk_direction = 0;
 			if (player_id >= PLAYER_CAP)	// TODO: replace PLAYER_CAP with actual number of connected players //

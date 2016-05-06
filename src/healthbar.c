@@ -1,5 +1,6 @@
 #include "healthbar.h"
 #include "main.h"
+#include "ailib.h"
 
 
 static void _calculate_one(MOVABLE_ENTRY *entry, DARNIT_TILE *tile, int x_pos, int id) {
@@ -15,7 +16,7 @@ static void _calculate_one(MOVABLE_ENTRY *entry, DARNIT_TILE *tile, int x_pos, i
 	d_render_tile_size_set(tile, 0, w, 16);
 	d_render_tile_size_set(tile, 1, 128 - w, 16);
 	d_render_tile_tilesheet_coord_set(tile, 0, 0, id * 16, w, 16);
-	d_render_tile_tilesheet_coord_set(tile, 1, 128 + w, 16 * id, w, 16);
+	d_render_tile_tilesheet_coord_set(tile, 1, 128 + w, 16 * id, 128 - w, 16);
 }
 
 
