@@ -1,11 +1,22 @@
-res/playersprite.png 64 64
+res/playersprite.png 32 32
+
+# Stand left
+D
+T 200 16
+E
 
 # Left
 D
-T 100 1
+T 200 17
+T 200 18
+T 200 19
+T 200 20
 E
 
 # Right
 D
-T 100 1
+T 200 17
+T 200 18
+T 200 19
+T 200 20
 E
