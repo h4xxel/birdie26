@@ -25,3 +25,4 @@ Eating your favourite vegetable restores your health.
 
 For the brave soul who is not afraid of looking at fugly code, the source code
 is on github (https://github.com/h4xxel/birdie26)
+Greetings to Znurre and B2 of Memory Leek for the help with the recorded audio.
