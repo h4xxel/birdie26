@@ -45,6 +45,7 @@ void restart_to_menu(const char *name) {
 	char buf[4096];
 	
 	server_shutdown();
+	network_close_tcp(server_sock);
 	
 	sprintf(buf, "%s", d_fs_exec_path());
 	sprintf(buf, "%s", basename(buf));
