@@ -2,6 +2,8 @@
 #include "main.h"
 #include "ailib.h"
 #include "util.h"
+#include "network/protocol.h"
+#include "server/server.h"
 #include <limits.h>
 #include <stdbool.h>
 
@@ -257,7 +259,7 @@ int movableGravity(MOVABLE_ENTRY *entry) {
 
 
 void movableLoop() {
-	int i, j, h_x, h_y, h_w, h_h, res;
+	int i, j, h_x, h_y, h_w, h_h, players_active = 0, winning_player = -1;
 	bool master = s->is_host;
 
 	//res = d_bbox_test(s->movable.bbox, 0, 0, INT_MAX, INT_MAX, s->movable.coll_buf, ~0);
@@ -267,6 +269,8 @@ void movableLoop() {
 		if (!s->movable.movable[i].hp)
 			continue;
 		if (master) {
+			if (_get_player_id(&s->movable.movable[i]))
+				players_active++, winning_player = _get_player_id(&s->movable.movable[i]);
 			if (s->movable.movable[i].ai)
 				s->movable.movable[i].ai(s, &s->movable.movable[i], MOVABLE_MSG_LOOP);
 			movableGravity(&s->movable.movable[i]);
@@ -290,6 +294,9 @@ void movableLoop() {
 			/* TODO: Make it play some sound effect here */
 		}
 	}
+
+	if (players_active <= 1 && master)
+		server_announce_winner(winning_player);
 
 }
 

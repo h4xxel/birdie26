@@ -176,6 +176,9 @@ void server_start() {
 	d_util_thread_new(server_thread, NULL);
 }
 
+void server_announce_winner(int winning_player) {
+	return;
+}
 
 void server_start_game() {
 	server_state = SERVER_STATE_STARTING;
