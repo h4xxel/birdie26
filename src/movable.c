@@ -269,7 +269,7 @@ void movableLoop() {
 		if (!s->movable.movable[i].hp)
 			continue;
 		if (master) {
-			if (_get_player_id(&s->movable.movable[i]))
+			if (_get_player_id(&s->movable.movable[i]) >= 0)
 				players_active++, winning_player = _get_player_id(&s->movable.movable[i]);
 			if (s->movable.movable[i].ai)
 				s->movable.movable[i].ai(s, &s->movable.movable[i], MOVABLE_MSG_LOOP);
@@ -295,8 +295,10 @@ void movableLoop() {
 		}
 	}
 
-	if (players_active <= 1 && master)
+	if (players_active <= 1 && master) {
+		fprintf(stderr, "win condition\n");
 		server_announce_winner(winning_player);
+	}
 
 }
 
