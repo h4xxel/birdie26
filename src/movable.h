@@ -54,6 +54,7 @@ typedef struct {
 	int			touch_dmg;
 	int			prevent_respawn;
 	void			(*ai)(void *s, void *entry, MOVABLE_MSG msg);
+	void			*mystery_pointer;
 } MOVABLE_ENTRY;
 	
 

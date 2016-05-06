@@ -1,0 +1,39 @@
+res/plant.png 32 32
+
+# Idle hidden (0)
+D
+T 100 0
+E
+
+# Growing (1)
+D
+T 200 0
+T 200 1
+T 200 2
+T 200 3
+T 200 4
+T 200 5
+T 200 6
+T 20000 7
+E
+
+
+# Grown (2)
+D
+T 200 7
+E
+
+# Potato (3)
+D
+T 200 8
+E
+
+# Carrot (4)
+D
+T 200 9
+E
+
+# Rutabaga (5)
+D
+T 200 10
+E

@@ -1,5 +1,11 @@
 res/playersprite.png 64 64
 
+# Left
+D
+T 100 0
+E
+
+# Right
 D
 T 100 0
 E

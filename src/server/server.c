@@ -75,6 +75,7 @@ void server_handle_client(ClientList *cli) {
 			HANDLE_KEY(left);
 			HANDLE_KEY(right);
 			HANDLE_KEY(jump);
+			HANDLE_KEY(grab);
 			break;
 	}
 }

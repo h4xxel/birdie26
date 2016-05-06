@@ -6,6 +6,12 @@
 #include <stdlib.h>
 
 
+#define	ROOT_SPAWN_TIME ((rand() % 20) * 500 + 3000 + d_time_get())
+
+void ai_root(void *dummy, void *entry, MOVABLE_MSG msg);
+static bool _root_grab(MOVABLE_ENTRY *self, MOVABLE_ENTRY *player);
+static void _root_toss(MOVABLE_ENTRY *self, int direction);
+
 static int _get_player_id(MOVABLE_ENTRY *self) {
 	/* On a scale of 1 to italy, how inefficient is this? */
 	const char *playerid_str;
@@ -61,8 +67,10 @@ void ai_player(void *dummy, void *entry, MOVABLE_MSG msg) {
 		case MOVABLE_MSG_INIT:
 			self->hp = self->hp_max = 400;
 			self->gravity_effect = 1;
+			s->player[player_id].last_walk_direction = 0;
 			if (player_id >= PLAYER_CAP)	// TODO: replace PLAYER_CAP with actual number of connected players //
 				self->hp = 0;
+			s->player[player_id].holding = NULL;
 			break;
 		case MOVABLE_MSG_LOOP:
 			if (_player_fix_hitbox(self))
@@ -84,6 +92,32 @@ void ai_player(void *dummy, void *entry, MOVABLE_MSG msg) {
 					self->y_velocity = -600;
 			}
 
+			if (ingame_keystate[player_id].grab && !s->player[player_id].holding) {
+				int nearby[6], x, y, w, h, i, found;
+
+				ingame_keystate[player_id].grab = 0;
+				fprintf(stderr, "Trying to pick root\n");
+				d_sprite_hitbox(self->sprite, &x, &y, &w, &h);
+				x += self->x / 1000;
+				y += self->y / 1000;
+				found = d_bbox_test(s->movable.bbox, x, y, w, h, (unsigned int *) nearby, 6);
+				for (i = 0; i < found; i++) {
+					if (nearby[i] == self->id)
+						continue;
+					if (s->movable.movable[nearby[i]].ai == ai_root) {	// If it looks like a potato, and thinks like a potato, it probably is a potato
+						if (_root_grab(&s->movable.movable[nearby[i]], self)) {
+							fprintf(stderr, "Grabbed root\n");
+							s->player[player_id].holding = &s->movable.movable[nearby[i]];
+						} else
+							continue;
+					}
+						
+				}
+			} else if (ingame_keystate[player_id].grab) {
+				_root_toss(s->player[player_id].holding, s->player[player_id].last_walk_direction);
+				s->player[player_id].holding = NULL;
+			}
+
 			self->direction = _player_direction(self);
 			break;
 		default:
@@ -92,8 +126,119 @@ void ai_player(void *dummy, void *entry, MOVABLE_MSG msg) {
 	}
 }
 
+
+enum RootState {
+	ROOT_STATE_INVISIBLE,
+	ROOT_STATE_GROWING,
+	ROOT_STATE_RIPE,
+	ROOT_STATE_HELD,
+	ROOT_STATE_THROWN
+};
+
+
+enum RootType {
+	ROOT_TYPE_POTATO,
+	ROOT_TYPE_CARROT,
+	ROOT_TYPE_RUTABAGA,
+	ROOT_TYPE_TYPES
+};
+
+
+struct RootStateStruct {
+	int home_x, home_y;
+	enum RootState	state;
+	int grow_progress;
+	enum RootType type;
+	MOVABLE_ENTRY *picker;
+};
+
+
+static bool _root_grab(MOVABLE_ENTRY *self, MOVABLE_ENTRY *player) {
+	struct RootStateStruct *rst = self->mystery_pointer;
+
+	if (rst->state != ROOT_STATE_RIPE)
+		return false;
+	rst->picker = player;
+	rst->state = ROOT_STATE_HELD;
+	rst->type = rand() % ROOT_TYPE_TYPES;
+	self->direction = 3 + rst->type;
+	return true;
+}
+
+
+static void _root_toss(MOVABLE_ENTRY *self, int direction) {
+	struct RootStateStruct *rst = self->mystery_pointer;
+	self->gravity_effect = 1;
+	self->x_velocity = direction?600:-600;
+	self->y_velocity = -1;
+
+	rst->state = ROOT_STATE_THROWN;
+}
+
+
+/* I can think to potato */
+void ai_root(void *dummy, void *entry, MOVABLE_MSG msg) {
+	MOVABLE_ENTRY *self = entry;
+	struct RootStateStruct *rst = self->mystery_pointer;
+
+	switch (msg) {
+		case MOVABLE_MSG_INIT:
+			self->hp = self->hp_max = 5;
+			rst = calloc(sizeof(*rst), 1);
+			rst->grow_progress = ROOT_SPAWN_TIME;
+			rst->state = ROOT_STATE_INVISIBLE;
+			rst->home_x = self->x, rst->home_y = self->y;
+			self->mystery_pointer = rst;
+			self->direction = 0;
+			break;
+		case MOVABLE_MSG_LOOP:
+			switch (rst->state) {
+				case ROOT_STATE_INVISIBLE:
+					if (rst->grow_progress <= d_time_get()) {
+						rst->state = ROOT_STATE_GROWING;
+						rst->grow_progress = d_time_get() + 7*200;
+						self->direction = 1;
+					}
+					break;
+				case ROOT_STATE_GROWING:
+					if (rst->grow_progress <= d_time_get()) {
+						rst->state = ROOT_STATE_RIPE;
+						rst->grow_progress = 0;
+						self->direction = 2;
+					}
+					break;
+				case ROOT_STATE_HELD: {
+					int x, y, w, h, x2, y2, w2, h2;
+					d_sprite_hitbox(rst->picker->sprite, &x, &y, &w, &h);
+					d_sprite_hitbox(self->sprite, &x2, &y2, &w2, &h2);
+					y -= (h2 + y2);
+					x = (x + w/2) - (w2/2);
+					x *= 1000, y *= 1000;
+					x += rst->picker->x;
+					y += rst->picker->y;
+					self->x = x, self->y = y;
+					break;
+				} 
+				case ROOT_STATE_THROWN:
+					if (!self->y_velocity) {
+						rst->state = ROOT_STATE_INVISIBLE;
+						self->direction = 0;
+						rst->grow_progress = ROOT_SPAWN_TIME;
+						self->x = rst->home_x, self->y = rst->home_y;
+						self->gravity_effect = 0;
+					}
+					break;
+				default:
+					break;
+			}
+			break;
+
+	}
+}
+
 static struct AILibEntry ailib[] = {
 	{ "player", ai_player },
+	{ "plant", ai_root },
 	{ NULL, NULL }
 };
 

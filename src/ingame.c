@@ -64,7 +64,7 @@ void ingame_client_keyboard() {
 	newstate.left = d_keys_get().left;
 	newstate.right = d_keys_get().right;
 	newstate.jump = d_keys_get().up;
-
+	newstate.grab = d_keys_get().down;
 	
 	
 	if (newstate.left ^ oldstate.left) {
@@ -86,6 +86,13 @@ void ingame_client_keyboard() {
 			pressevent.jump = true, releaseevent.jump = false;
 		else
 			releaseevent.jump = true, pressevent.jump = false;
+	}
+
+	if (newstate.grab ^ oldstate.grab) {
+		if (newstate.grab)
+			pressevent.grab = true, releaseevent.grab = false;
+		else
+			releaseevent.grab = true, pressevent.grab = false;
 	}
 
 	PacketKeypress kp;

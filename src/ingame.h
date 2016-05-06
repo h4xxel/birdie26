@@ -12,6 +12,7 @@ struct InGameKeyStateEntry {
 	bool			left;
 	bool			right;
 	bool			jump;
+	bool			grab;
 };
 
 
