@@ -8,9 +8,19 @@
 
 #define	ROOT_SPAWN_TIME ((rand() % 20) * 500 + 3000 + d_time_get())
 
+enum RootType {
+	ROOT_TYPE_POTATO,
+	ROOT_TYPE_CARROT,
+	ROOT_TYPE_RUTABAGA,
+	ROOT_TYPE_TYPES
+};
+
 void ai_root(void *dummy, void *entry, MOVABLE_MSG msg);
 static bool _root_grab(MOVABLE_ENTRY *self, MOVABLE_ENTRY *player);
 static void _root_toss(MOVABLE_ENTRY *self, int direction);
+static bool _root_is_hostile(MOVABLE_ENTRY *self, MOVABLE_ENTRY *player);
+static enum RootType _root_type(MOVABLE_ENTRY *self);
+static void _root_splat(MOVABLE_ENTRY *self);
 
 static int _get_player_id(MOVABLE_ENTRY *self) {
 	/* On a scale of 1 to italy, how inefficient is this? */
@@ -118,6 +128,36 @@ void ai_player(void *dummy, void *entry, MOVABLE_MSG msg) {
 				s->player[player_id].holding = NULL;
 			}
 
+			{
+				int nearby[16], found, x, y, w, h, i;
+				
+				d_sprite_hitbox(self->sprite, &x, &y, &w, &h);
+				x += self->x / 1000;
+				y += self->y / 1000;
+				found = d_bbox_test(s->movable.bbox, x, y, w, h, (unsigned int *) nearby, 16);
+				for (i = 0; i < found; i++) {
+					enum RootType type;
+					if (s->movable.movable[nearby[i]].ai != ai_root)
+						continue;	// Who cares about them pesky players? //
+					if (!_root_is_hostile(&s->movable.movable[nearby[i]], self))
+						continue;
+					type = _root_type(&s->movable.movable[nearby[i]]);
+
+					/* Handle specific per-root effects here */
+					if (type == ROOT_TYPE_POTATO) {
+
+					} else if (type == ROOT_TYPE_CARROT) {
+					
+					} else if (type == ROOT_TYPE_RUTABAGA) {
+
+					} else {
+
+					}
+					_root_splat(&s->movable.movable[nearby[i]]);
+				}
+
+			}
+
 			self->direction = _player_direction(self);
 			break;
 		default:
@@ -135,13 +175,6 @@ enum RootState {
 	ROOT_STATE_THROWN
 };
 
-
-enum RootType {
-	ROOT_TYPE_POTATO,
-	ROOT_TYPE_CARROT,
-	ROOT_TYPE_RUTABAGA,
-	ROOT_TYPE_TYPES
-};
 
 
 struct RootStateStruct {
@@ -166,6 +199,18 @@ static bool _root_grab(MOVABLE_ENTRY *self, MOVABLE_ENTRY *player) {
 }
 
 
+static void _root_splat(MOVABLE_ENTRY *self) {
+	struct RootStateStruct *rst = self->mystery_pointer;
+	rst->state = ROOT_STATE_INVISIBLE;
+	self->direction = 0;
+	rst->grow_progress = ROOT_SPAWN_TIME;
+	self->x = rst->home_x, self->y = rst->home_y;
+	self->gravity_effect = 0;
+	self->x_velocity = 0;
+	
+}
+
+
 static void _root_toss(MOVABLE_ENTRY *self, int direction) {
 	struct RootStateStruct *rst = self->mystery_pointer;
 	self->gravity_effect = 1;
@@ -173,6 +218,20 @@ static void _root_toss(MOVABLE_ENTRY *self, int direction) {
 	self->y_velocity = -1;
 
 	rst->state = ROOT_STATE_THROWN;
+}
+
+
+static bool _root_is_hostile(MOVABLE_ENTRY *self, MOVABLE_ENTRY *player) {
+	struct RootStateStruct *rst = self->mystery_pointer;
+	if (rst->state != ROOT_STATE_THROWN)
+		return false;
+	return rst->picker != player;
+}
+
+
+static enum RootType _root_type(MOVABLE_ENTRY *self) {
+	struct RootStateStruct *rst = self->mystery_pointer;
+	return rst->type;
 }
 
 
@@ -221,11 +280,7 @@ void ai_root(void *dummy, void *entry, MOVABLE_MSG msg) {
 				} 
 				case ROOT_STATE_THROWN:
 					if (!self->y_velocity) {
-						rst->state = ROOT_STATE_INVISIBLE;
-						self->direction = 0;
-						rst->grow_progress = ROOT_SPAWN_TIME;
-						self->x = rst->home_x, self->y = rst->home_y;
-						self->gravity_effect = 0;
+						_root_splat(self);
 					}
 					break;
 				default:
