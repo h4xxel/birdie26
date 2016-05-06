@@ -260,10 +260,12 @@ void movableLoop() {
 	int i, j, h_x, h_y, h_w, h_h, res;
 	bool master = s->is_host;
 
-	res = d_bbox_test(s->movable.bbox, 0, 0, INT_MAX, INT_MAX, s->movable.coll_buf, ~0);
+	//res = d_bbox_test(s->movable.bbox, 0, 0, INT_MAX, INT_MAX, s->movable.coll_buf, ~0);
 
-	for (j = 0; j < res; j++) {
-		i = s->movable.coll_buf[j];
+	for (j = 0; j < s->movable.movables; j++) {
+		i = j;
+		if (!s->movable.movable[i].hp)
+			continue;
 		if (master) {
 			if (s->movable.movable[i].ai)
 				s->movable.movable[i].ai(s, &s->movable.movable[i], MOVABLE_MSG_LOOP);
@@ -310,15 +312,16 @@ void movableFreezeSprites(int freeze) {
 
 
 void movableLoopRender(int layer) {
-	int i, res;
+	int i;
 
-	res = d_bbox_test(s->movable.bbox, s->camera.x - 128, s->camera.y - 128, d_platform_get().screen_w + 256, d_platform_get().screen_h + 256, s->movable.coll_buf, ~0);
+//	res = d_bbox_test(s->movable.bbox, s->camera.x - 128, s->camera.y - 128, d_platform_get().screen_w + 256, d_platform_get().screen_h + 256, s->movable.coll_buf, ~0);
 
-	for (i = 0; i < res; i++) {
-		if (s->movable.movable[s->movable.coll_buf[i]].l != layer)
+	for (i = 0; i < s->movable.movables; i++) {
+		if (s->movable.movable[i].l != layer)
 			continue;
-		if (!s->movable.movable[s->movable.coll_buf[i]].hp)
+		if (!s->movable.movable[i].hp) {
 			continue;
-		d_sprite_draw(s->movable.movable[s->movable.coll_buf[i]].sprite);
+		}
+		d_sprite_draw(s->movable.movable[i].sprite);
 	}
 }
