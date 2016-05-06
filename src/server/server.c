@@ -134,7 +134,7 @@ int server_thread(void *arg) {
 				d_util_semaphore_wait(sem);
 				
 				move.type = PACKET_TYPE_MOVE_OBJECT;
-				move.size = 4 + s->movable.movables*5;
+				move.size = 4 + s->movable.movables*6;
 				p = move.raw;
 				
 				for(i = 0; i < s->movable.movables; i++) {
@@ -144,6 +144,8 @@ int server_thread(void *arg) {
 					p+= 2;
 					*((uint8_t *) p) = s->movable.movable[i].direction;
 					p+= 1;
+					*((uint8_t *) p) = (s->movable.movable[i].angle / 10 / 2);
+					p += 1;
 				}
 				
 				for(tmp = client; tmp; tmp = tmp->next)

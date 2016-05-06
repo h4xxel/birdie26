@@ -49,6 +49,32 @@ struct PacketKeypress {
 	struct InGameKeyStateEntry keypress, keyrelease;
 };
 
+typedef struct PacketParticleBurst PacketParticleBurst;
+struct PacketParticleBurst {
+	uint16_t type;
+	uint16_t size;
+
+	uint8_t point_size;
+	uint8_t color_r;
+	uint8_t color_g;
+	uint8_t color_b;
+	uint8_t color_a;
+	uint8_t color_rt;
+	uint8_t color_gt;
+	uint8_t color_bt;
+	uint8_t color_at;
+	int16_t angle_min;
+	int16_t angle_max;
+	int16_t gravity_x;
+	int16_t gravity_y;
+	int16_t velocity_min;
+	int16_t velocity_max;
+	int16_t spawnrate;
+	int16_t life;
+
+	
+};
+
 typedef struct PacketExit PacketExit;
 struct PacketExit {
 	uint16_t type;

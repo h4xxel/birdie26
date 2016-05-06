@@ -2,8 +2,10 @@
 #include "movable.h"
 #include "ingame.h"
 #include "main.h"
+#include "trigonometry.h"
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 
 
 #define	ROOT_SPAWN_TIME ((rand() % 20) * 500 + 3000 + d_time_get())
@@ -209,7 +211,7 @@ static void _root_splat(MOVABLE_ENTRY *self) {
 	self->x = rst->home_x, self->y = rst->home_y;
 	self->gravity_effect = 0;
 	self->x_velocity = 0;
-	
+	self->angle = 0;
 }
 
 
@@ -251,6 +253,7 @@ void ai_root(void *dummy, void *entry, MOVABLE_MSG msg) {
 			rst->home_x = self->x, rst->home_y = self->y;
 			self->mystery_pointer = rst;
 			self->direction = 0;
+			self->angle = 0;
 			break;
 		case MOVABLE_MSG_LOOP:
 			switch (rst->state) {
@@ -281,9 +284,11 @@ void ai_root(void *dummy, void *entry, MOVABLE_MSG msg) {
 					break;
 				} 
 				case ROOT_STATE_THROWN:
+					self->angle = (trig_delta_to_angle_f(self->y, self->x) * 1800 / M_PI);
 					if (!self->y_velocity) {
 						_root_splat(self);
 					}
+
 					break;
 				default:
 					break;
